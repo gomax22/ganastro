@@ -15,14 +15,14 @@ class DiscriminatorBlock(nn.Module):
     
     
 class Discriminator(nn.Module):
-    def __init__(self, num_features, color_channels, n_layers=6):
+    def __init__(self, num_features, num_channels, n_layers=6):
         super(Discriminator, self).__init__()
         self.num_features = num_features
-        self.color_channels = color_channels
+        self.num_channels = num_channels
         self.n_layers = n_layers
         
         self.net = nn.ModuleList()
-        self.net.append(DiscriminatorBlock(color_channels, num_features, 4, 2, 3))
+        self.net.append(DiscriminatorBlock(num_channels, num_features, 4, 2, 3))
         
         layers = [2 ** i for i in range(0, n_layers+1)]
         self.net.append([DiscriminatorBlock(num_features * layers[i], num_features * layers[i+1], 4, 2, 1) for i in range(n_layers)])
