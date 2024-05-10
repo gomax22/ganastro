@@ -25,10 +25,10 @@ class Generator(nn.Module):
         self.n_layers = n_layers    
 
         self.net = nn.ModuleList()
-        self.net.append(GeneratorBlock(latent_dim, num_features * (2 ** n_layers), 4, 1, 0))
+        self.net.append(GeneratorBlock(latent_dim, num_features * (2 ** n_layers), 6, 1, 0)) # 100, 16 * (64), 6, 6
         
-        layers = [2 ** i for i in range(n_layers, 0, -1)]
-        self.net.append([GeneratorBlock(num_features * layers[i], num_features * layers[i-1], 4, 2, 1) for i in range(n_layers)])
+        layers = [2 ** i for i in range(n_layers, -1, -1)]
+        self.net.append([GeneratorBlock(num_features * layers[i], num_features * layers[i+1], 4, 2, 1) for i in range(n_layers)])
         self.net.append(nn.Sequential(
             nn.ConvTranspose2d(num_features, color_channels, 4, 2, 4, bias=False),
             nn.Tanh()
@@ -39,4 +39,5 @@ class Generator(nn.Module):
         for layer in self.net:
             x = layer(x)
         return x
+
 

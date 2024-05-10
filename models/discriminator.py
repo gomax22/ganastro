@@ -24,7 +24,7 @@ class Discriminator(nn.Module):
         self.net = nn.ModuleList()
         self.net.append(DiscriminatorBlock(color_channels, num_features, 4, 2, 3))
         
-        layers = [2 ** i for i in range(0, n_layers)]
+        layers = [2 ** i for i in range(0, n_layers+1)]
         self.net.append([DiscriminatorBlock(num_features * layers[i], num_features * layers[i+1], 4, 2, 1) for i in range(n_layers)])
         self.net.append(nn.Sequential(
             nn.Conv2d(num_features * (2 ** n_layers), 1, 6, 1, 0),
@@ -36,3 +36,4 @@ class Discriminator(nn.Module):
         for layer in self.net:
             x = layer(x)
         return x
+    
