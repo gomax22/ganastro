@@ -5,14 +5,16 @@ import torch.optim as optim
 import time
 from tqdm import trange
 from torch.utils.data import DataLoader, random_split
-from ..models.generator import Generator
-from ..models.discriminator import Discriminator
+from models.generator import Generator
+from models.discriminator import Discriminator
 from typing import Tuple
 import torchvision
-
+from data.dataset import NpzDataset
+from torchvision.transforms import transforms
 
 class DCGAN_Trainer:
-    def __init__(self, config: dict, device: torch.device):
+    def __init__(self, data_root: str, config: dict, device: torch.device):
+        self.data_root = data_root
         self.device = device
         self.dcgan_config = config
         self.lr = self.dcgan_config["lr"]
@@ -35,8 +37,7 @@ class DCGAN_Trainer:
         if not os.path.exists(self.weights_dir):
             os.makedirs(self.weights_dir)
 
-    def train(self, X: torch.Tensor, logging_interval: int = 100) -> Tuple[Generator, Discriminator]:
-        self.X = X.view(X.size(0), -1)
+    def train(self, logging_interval: int = 100) -> Tuple[Generator, Discriminator]:
         self.criterion = nn.BCEWithLogitsLoss()
 
         self.log_dict = {'train_generator_loss_per_batch': [],
@@ -174,13 +175,20 @@ class DCGAN_Trainer:
                 torchvision.utils.make_grid(fake_images, padding=2, normalize=True))
             
     def _get_data_loader(self) -> tuple:
-        trainset_len = int(len(self.X) * 0.9)
-        validset_len = len(self.X) - trainset_len
-        trainset, validset = random_split(self.X, [trainset_len, validset_len])
+        
+        transform = transforms.Compose([
+            transforms.ToTensor(), 
+            transforms.Normalize((0.5,), (0.5,))
+        ])
+        
+        dataset = NpzDataset(self.data_root, (self.num_features, self.num_features), transform=transform)
+        trainset_len = int(len(dataset) * 0.9)
+        validset_len = len(dataset) - trainset_len
+        trainset, validset = random_split(dataset, [trainset_len, validset_len])
         train_loader = DataLoader(
-            trainset, batch_size=self.ae_config["batch_size"], shuffle=True
+            trainset, batch_size=self.dcgan_config["batch_size"], shuffle=True
         )
         valid_loader = DataLoader(
-            validset, batch_size=self.ae_config["batch_size"], shuffle=False
+            validset, batch_size=self.dcgan_config["batch_size"], shuffle=False
         )
         return train_loader, valid_loader
