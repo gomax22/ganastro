@@ -8,42 +8,65 @@ import multiprocessing
 from tqdm import tqdm
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-d", "--dataset", required=True, help="path to data directory")
-    ap.add_argument("-o", "--output", required=True, help="path to output directory")
-    ap.add_argument("-s", "--samples-per-night", required=True, type=int, default=58, help="number of samples to generate per night")
-    ap.add_argument("-k", "--k", required=True, default=5, type=int, help="number of observations to combine")
-    ap.add_argument("-r", "--sampling-ratio", required=False, default=1.0, type=float, help="sampling ratio")
-    ap.add_argument("-m", "--max-nights", required=False, default=None, type=int, help="number of nights to generate")
-    ap.add_argument("-b", "--cut-begin", required=False, default=None, type=float, help="cut beginning of wavelength range")
-    ap.add_argument("-e", "--cut-end", required=False, default=None, type=float, help="cut end of wavelength range")
-    ap.add_argument("-c", "--concurrency", required=False, default=True, type=bool, help="use concurrency")
+def check_args(args):
+    # check if dataset directory exists
+    if not Path(args["dataset"]).exists():
+        raise ValueError(f"Dataset directory {args['dataset']} does not exist.")
     
-    args = vars(ap.parse_args())
+    # check if samples per night is positive
+    if args["samples_per_night"] <= 0:
+        raise ValueError("Samples per night must be a positive integer.")
+    
+    # check if k is positive
+    if args["k"] <= 0:
+        raise ValueError("K must be a positive integer.")
+    
+    # check if sampling ratio is positive
+    if args["sampling_ratio"] <= 0:
+        raise ValueError("Sampling ratio must be a positive float.")
+    
+    # check if max nights is positive
+    if args["max_nights"] is not None and args["max_nights"] <= 0:
+        raise ValueError("Max nights must be a positive integer.")
+    
+    # check if cutoff begin is positive
+    if args["cutoff_begin"] is not None and args["cutoff_begin"] <= 0:
+        raise ValueError("cutoff begin must be a positive float.")
+    
+    # check if cutoff end is positive
+    if args["cutoff_end"] is not None and args["cutoff_end"] <= 0:
+        raise ValueError("cutoff end must be a positive float.")
+    
+    # check if cutoff end is greater than cutoff begin
+    if args["cutoff_begin"] is not None and args["cutoff_end"] is not None and args["cutoff_end"] < args["cutoff_begin"]:
+        raise ValueError("cutoff end must be greater than cutoff begin.")
+    
+    # check if concurrency is a boolean
+    if not isinstance(args["concurrency"], bool):
+        raise ValueError("Concurrency must be a boolean.")
+    
+    return True
 
+def main(args):
+    # get arguments
     dataset = args["dataset"]
     output = args["output"]
-    cut_begin = args["cut_begin"]
-    cut_end = args["cut_end"]
     samples_per_night = args["samples_per_night"]
-    samples_per_night = samples_per_night if samples_per_night is not None and samples_per_night > 0 else 58
     k = args["k"]
     sampling_ratio = args["sampling_ratio"]
-    sampling_ratio = sampling_ratio if sampling_ratio is not None and sampling_ratio > 0 else 1.0
     max_nights = args["max_nights"]
-    max_nights = max_nights if max_nights is not None and max_nights > 0 else None
+    cutoff_begin = args["cutoff_begin"]
+    cutoff_end = args["cutoff_end"]
     concurrency = args["concurrency"]
     
-
     # print input parameters
     print(f"Dataset: {dataset}")
     print(f"Output: {output}")
     print(f"Samples per night: {samples_per_night}")
     print(f"K: {k}")
     print(f"Sampling ratio: {sampling_ratio}")
-    print(f"Cut begin: {cut_begin}")
-    print(f"Cut end: {cut_end}")
+    print(f"cutoff begin: {cutoff_begin}")
+    print(f"cutoff end: {cutoff_end}")
     print(f"Concurrency: {concurrency} (no. of cores: {multiprocessing.cpu_count()})")
 
     # create output directory
@@ -58,13 +81,10 @@ def main():
     print(f"\nProcessing night {dataset}")
 
     # get observations from night
-    night = Night.from_directory(dataset, cut_begin, cut_end)
+    night = Night.from_directory(dataset, cutoff_begin, cutoff_end)
     
     # interpolate the night observations
     night.interpolate()
-    
-    # cutoff wavelength ranges eventually
-    night.cutoff()
 
     # generate samples of night from this night
     date = dataset.split(os.sep)[-1]
@@ -78,19 +98,20 @@ def main():
         concurrency=concurrency)
     
     # print("\n")
-        
-    """
-    # save generated nights using np.savedz_compressed
-    
-    pbar = tqdm(total=len(generated_nights), desc="Saving generated nights...")
-    
-    for idx, generated_night in enumerate(generated_nights):
-        generated_night.save(output, date, idx)
-        
-        pbar.update(1)
-    pbar.close()
-    """    
     
 
 if __name__ == "__main__":
-    main()
+    ap = argparse.ArgumentParser(description="Generate scrambled nights from night observations")
+    ap.add_argument("-d", "--dataset", required=True, help="path to data directory")
+    ap.add_argument("-o", "--output", required=True, help="path to output directory")
+    ap.add_argument("-s", "--samples-per-night", required=True, type=int, default=58, help="number of samples to generate per night")
+    ap.add_argument("-k", "--k", required=True, default=5, type=int, help="number of observations to combine")
+    ap.add_argument("-r", "--sampling-ratio", required=False, default=1.0, type=float, help="sampling ratio")
+    ap.add_argument("-m", "--max-nights", required=False, default=None, type=int, help="number of nights to generate")
+    ap.add_argument("-b", "--cutoff-begin", required=False, default=None, type=float, help="cutoff beginning of wavelength range (in Angstroms)")
+    ap.add_argument("-e", "--cutoff-end", required=False, default=None, type=float, help="cutoff end of wavelength range (in Angstroms)")
+    ap.add_argument("-c", "--concurrency", required=False, default=True, type=bool, help="use concurrency")
+    
+    args = vars(ap.parse_args())
+    check_args(args)
+    main(args)
