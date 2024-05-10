@@ -20,25 +20,20 @@ class DCGAN_Trainer:
         self.lr = self.dcgan_config["lr"]
         self.betas = self.dcgan_config["betas"]
         self.epochs = self.dcgan_config["epochs"]
-        self.min_lr = self.dcgan_config["min_lr"]
-        self.lr_decay = self.dcgan_config["lr_decay"]
-        self.patience = self.dcgan_config["patience"]
         self.n_layers = self.dcgan_config["n_layers"]
         self.batch_size = self.dcgan_config["batch_size"]
         self.num_features = self.dcgan_config["num_features"]
         self.latent_dim = self.dcgan_config["latent_dim"]
         self.num_channels = self.dcgan_config["num_channels"]
-        
-        
-        self.weights_dir = "ganestro/trainers/weights"
-        self.weights_gen = "ganestro/trainers/weights/generator.pth"
-        self.weights_disc = "ganestro/trainers/weights/discriminator.pth"
+        self.weights_dir = self.dcgan_config["weights_dir"]
+        self.weights_gen = self.dcgan_config["weights_gen"]
+        self.weights_disc = self.dcgan_config["weights_disc"]
         
         if not os.path.exists(self.weights_dir):
             os.makedirs(self.weights_dir)
 
     def train(self, logging_interval: int = 100) -> Tuple[Generator, Discriminator]:
-        self.criterion = nn.BCEWithLogitsLoss()
+        self.criterion = nn.BCELoss()
 
         self.log_dict = {'train_generator_loss_per_batch': [],
             'train_discriminator_loss_per_batch': [],
@@ -57,20 +52,15 @@ class DCGAN_Trainer:
             self.device
         )
        
-        # self.ae_net = AEModel(self.architecture, input_dim=self.X.shape[1]).to(
-        #     self.device
-        # )
-
         self.optimizer_G = optim.Adam(self.generator.parameters(), lr=self.lr, betas=self.betas)
         self.optimizer_D = optim.Adam(self.discriminator.parameters(), lr=self.lr, betas=self.betas)
 
-        self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            self.optimizer, mode="min", factor=self.lr_decay, patience=self.patience
-        )
-
-        if os.path.exists(self.weights_path):
+        try:
             self.generator.load_state_dict(torch.load(self.weights_gen))
             self.discriminator.load_state_dict(torch.load(self.weights_disc))
+            print("Loaded checkpoint successfully")
+        except:
+            print("No checkpoint found")
 
         train_loader, valid_loader = self._get_data_loader()
 
@@ -83,8 +73,6 @@ class DCGAN_Trainer:
             self.generator.train()
             self.discriminator.train()
             
-            gen_loss = 0.0
-            disc_loss = 0.0
             for batch_idx, (features, _) in enumerate(train_loader):
                 
                 batch_size = features.size(0)
@@ -186,9 +174,9 @@ class DCGAN_Trainer:
         validset_len = len(dataset) - trainset_len
         trainset, validset = random_split(dataset, [trainset_len, validset_len])
         train_loader = DataLoader(
-            trainset, batch_size=self.dcgan_config["batch_size"], shuffle=True
+            trainset, batch_size=self.batch_size, shuffle=True
         )
         valid_loader = DataLoader(
-            validset, batch_size=self.dcgan_config["batch_size"], shuffle=False
+            validset, batch_size=self.batch_size, shuffle=False
         )
         return train_loader, valid_loader

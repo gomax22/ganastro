@@ -1,0 +1,40 @@
+{
+    "architecture": {
+        "num_features": 762,
+        "num_channels": 1,
+        "n_layers": 6,
+        "latent_dim": 100
+    },
+    "generator": {
+        "optimizer": {
+            "name": "Adam",
+            "args": {
+                "lr": 0.0002,
+                "betas": [
+                    0.5,
+                    0.999
+                ]
+            }
+        }
+    },
+    "discriminator": {
+        "optimizer": {
+            "name": "Adam",
+            "args": {
+                "lr": 0.0002,
+                "betas": [
+                    0.5,
+                    0.999
+                ]
+            }
+        }
+    },
+    "training": {
+        "batch_size": 64,
+        "num_epochs": 100
+    },
+    "checkpoint": {
+        "save_interval": 1,
+        "save_dir": "checkpoints"
+    }
+}
