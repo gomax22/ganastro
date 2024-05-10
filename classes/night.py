@@ -66,16 +66,10 @@ class Night:
         return self
         
     def cutoff(self, verbose=True):
-        if self.cutoff_begin is not None:
-            idx_begin = np.argmin(np.abs(self.wave_ref - self.cutoff_begin))
-        else:
-            idx_begin = 0
-        
-        if self.cutoff_end is not None:
-            idx_end = np.argmin(np.abs(self.wave_ref - self.cutoff_end))
-        else:
-            idx_end = len(self.wave_ref)
-        
+       
+        idx_begin = np.argmin(np.abs(self.wave_ref - self.cutoff_begin)) if self.cutoff_begin is not None else 0
+        idx_end = np.argmin(np.abs(self.wave_ref - self.cutoff_end)) if self.cutoff_end is not None else len(self.wave_ref)
+
         for obs in self.observations:
             obs.wave = np.array(obs.wave[idx_begin:idx_end], dtype=np.float32)
             obs.n_pixels = len(obs.wave)
@@ -85,7 +79,7 @@ class Night:
         if verbose: print(f"Cutoff of wavelength range completed.")
         return self
     
-    def generate_night(self, combinations, out_path, date, idx):
+    def generate_night(self, combinations, output_dir, date, idx):
         
         samples = []
         
@@ -93,10 +87,17 @@ class Night:
             samples.append(Observation.from_observations([self.observations[idx] for idx in c], self.wave_ref))
         
         night = Night.from_observations(samples, wave_ref=self.wave_ref, cutoff_begin=self.cutoff_begin, cutoff_end=self.cutoff_end) \
-            .interpolate(progress=False, verbose=False) \
-            .cutoff(verbose=False)
-            
-        night.save(out_path, date, idx)
+            .interpolate(progress=False, verbose=False)
+        
+        # save full night
+        out_fname = os.path.join(output_dir, f"night_{date}_{idx}.npz")
+        night.save(out_fname)
+        
+        if night.cutoff_begin is not None and night.cutoff_end is not None:
+            # save cut night
+            out_fname = os.path.join(output_dir, f"night_{date}_{idx}_cb{int(night.cutoff_begin)}_ce{int(night.cutoff_end)}.npz")
+            night.cutoff(verbose=False)
+            night.save(out_fname)
     
     
     def generate(self, k, samples_per_night, sampling_ratio, max_nights, out_path, date, concurrency=True, verbose=True):
@@ -146,21 +147,22 @@ class Night:
             pbar.close()
         
         
-    def save(self, out_path, date, idx):
+    def save(self, fname):
+        
         # initial additional parameters
-        humidity = []
-        pressure = []
-        windspeed = []
-        winddir = []
-        temp10m = []
-        airmass = []
-        berv = []
-        bervmx = []
-        snr = []
-        names = []
-        flux = []
-        wave = []
-        error = []
+        humidity    =   []
+        pressure    =   []
+        windspeed   =   []
+        winddir     =   []
+        temp10m     =   []
+        airmass     =   []
+        berv        =   []
+        bervmx      =   []
+        snr         =   []
+        names       =   []
+        flux        =   []
+        wave        =   []
+        error       =   []
         
         # extract additional parameters
         for obs in self.observations:
@@ -180,7 +182,7 @@ class Night:
         
         # save generated night
         np.savez_compressed(
-            os.path.join(out_path, f"night_{date}_{idx}.npz"),
+            fname,
             flux=np.array(flux, dtype=np.float32), 
             error=np.array(error, dtype=np.float32), 
             wave=np.array(wave, dtype=np.float32),
