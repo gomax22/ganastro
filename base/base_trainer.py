@@ -68,7 +68,8 @@ class BaseTrainer:
 
             # save logged informations into log dict
             log = {'epoch': epoch}
-            log.update(result)
+            for res in result:
+                log.update(res)
 
             # print logged informations to the screen
             for key, value in log.items():

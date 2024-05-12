@@ -11,11 +11,12 @@ class Trainer(BaseTrainer):
     """
     Trainer class
     """
-    def __init__(self, models, criterion, metric_ftns, optimizers, config, device,
+    def __init__(self, models, criterion, metric_ftns, optimizers, config, device, device_ids,
                  data_loader, valid_data_loader=None, lr_scheduler=None, len_epoch=None):
         super().__init__(models, criterion, metric_ftns, optimizers, config)
         self.config = config
         self.device = device
+        self.device_ids = device_ids
         self.data_loader = data_loader
         if len_epoch is None:
             # epoch-based training
@@ -33,8 +34,10 @@ class Trainer(BaseTrainer):
                               MetricTracker('D_loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer),
                               MetricTracker('real_acc', *[m.__name__ for m in self.metric_ftns], writer=self.writer),
                               MetricTracker('fake_acc', *[m.__name__ for m in self.metric_ftns], writer=self.writer)]
-                    
-        self.fixed_noise =  torch.randn(64, self.models[0].latent_dim, 1, 1, device=self.device) # format NCHW
+
+        latent_dim = self.config['generator']['args']['latent_dim']
+        batch_size = self.config['data_loader']['args']['batch_size']
+        self.fixed_noise =  torch.randn(batch_size, latent_dim, 1, 1, device=self.device) # format NCHW
         
         
     def _train_epoch(self, epoch):
@@ -44,6 +47,8 @@ class Trainer(BaseTrainer):
         :param epoch: Integer, current training epoch.
         :return: A log that contains average loss and metric in this epoch.
         """
+        
+        latent_dim = self.config['generator']['args']['latent_dim']
         
         for idx in range(2):
             self.models[idx].train()
@@ -61,7 +66,7 @@ class Trainer(BaseTrainer):
             real_labels = torch.ones(batch_size, device=self.device)
             
             # generated (fake) images
-            noise = torch.randn(batch_size, self.models[0].latent_dim, 1, 1, device=self.device)  # format NCHW
+            noise = torch.randn(batch_size, latent_dim, 1, 1, device=self.device)  # format NCHW
             fake_images = self.models[0](noise)
             fake_labels = torch.zeros(batch_size, device=self.device) # fake label = 0
             flipped_fake_labels = real_labels # here, fake label = 1

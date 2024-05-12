@@ -64,6 +64,7 @@ def main(config):
     trainer = Trainer(models, criterion, metrics, optimizers,
                       config=config,
                       device=device,
+                      device_ids=device_ids,
                       data_loader=data_loader,
                       valid_data_loader=valid_data_loader
     )
