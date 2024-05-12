@@ -59,20 +59,10 @@ class FolderDataset(Dataset):
 
 
 class NpzDataset(Dataset):
-    """
-    Deprecated, reference purpose only now.
-    Sometimes we need more information, not only image and its corresponding label.
-    We can use a npz file to offer this information.
-    This file should have the following keys:
-    1. samples: the path array of images, should be relative path (image_root).
-    2. labels: corresponding labels.
-
-    Notice: please make sure the order is correct among those attributes.
-    """
-
     def __init__(self, data_dir, img_shape, transform=None):
         self.samples = [os.path.join(data_dir, entry) for entry in os.listdir(data_dir) if entry.endswith('_cb4240_ce4340.npz')]
         self.img_shape = img_shape
+        self.transform = transform
     
     def __getitem__(self, index):
         flux = np.load(self.samples[index])['flux']
@@ -99,11 +89,12 @@ class NpzDataset(Dataset):
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
         """
-        flux = flux.resize(self.img_size)
+        
+        flux.resize(self.img_shape)
         
         if self.transform is not None:
             flux = self.transform(flux)
-        return flux
+        return (flux, self.samples[index])
 
     def __len__(self):
         return len(self.samples)
