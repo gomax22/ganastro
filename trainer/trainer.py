@@ -26,7 +26,8 @@ class Trainer(BaseTrainer):
             self.data_loader = inf_loop(data_loader)
             self.len_epoch = len_epoch
         self.valid_data_loader = valid_data_loader
-        self.do_validation = self.valid_data_loader is not None
+        # self.do_validation = self.valid_data_loader is not None
+        self.do_validation = True
         self.lr_scheduler = lr_scheduler
         self.log_step = int(np.sqrt(data_loader.batch_size))
 
@@ -124,7 +125,7 @@ class Trainer(BaseTrainer):
         if self.do_validation:
             # val_log = self._valid_epoch(epoch)
             # log.update(**{'val_'+k : v for k, v in val_log.items()})
-            self._valid_epoch(epoch)
+            self._valid_epoch()
         
         """
         if self.lr_scheduler is not None:
