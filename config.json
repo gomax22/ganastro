@@ -24,7 +24,7 @@
         "args":{
             "data_dir": "/projects/data/HARPN/K9_synthetic/",
             "img_shape": [762, 762],
-            "batch_size": 128,
+            "batch_size": 64,
             "shuffle": true,
             "num_workers": 2
         }
@@ -38,10 +38,10 @@
             "amsgrad": false
         }
     },
-    "loss": "bce_loss",
+    "loss": "bce_loss_with_logits",
     "metrics": [],
     "trainer": {
-        "epochs": 10,
+        "epochs": 100,
 
         "save_dir": "saved/",
         "save_period": 1,
