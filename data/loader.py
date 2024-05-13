@@ -6,6 +6,7 @@ from data import dataset
 class NpzDataLoader(BaseDataLoader):
     def __init__(self, data_dir, img_shape, batch_size, shuffle=True, validation_split=0.0, num_workers=1):
         trsfm = transforms.Compose([
+            transforms.ToPILImage(),
             transforms.ToTensor(),
             transforms.Normalize((0.5,), (0.5,))
         ])
