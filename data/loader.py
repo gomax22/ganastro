@@ -4,12 +4,12 @@ from torchvision import transforms
 from data import dataset
 
 class NpzDataLoader(BaseDataLoader):
-    def __init__(self, data_dir, img_shape, batch_size, shuffle=True, validation_split=0.0, num_workers=1):
-        trsfm = transforms.Compose([
-            transforms.ToPILImage(),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,))
-        ])
+    def __init__(self, data_dir, img_shape, batch_size, shuffle=True, validation_split=0.1, num_workers=1):
+        # trsfm = transforms.Compose([
+        #     transforms.ToPILImage(),
+        #     transforms.ToTensor(),
+        #     transforms.Normalize((0.5,), (0.5,))
+        # ])
         self.data_dir = data_dir
-        self.dataset = dataset.NpzDataset(self.data_dir, tuple(img_shape), transform=trsfm)
+        self.dataset = dataset.NpzDataset(self.data_dir, tuple(img_shape))
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
