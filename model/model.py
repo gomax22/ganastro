@@ -126,7 +126,8 @@ class Discriminator(BaseModel):
 class GeneratorDropout(BaseModel):
     def __init__(self, num_features, latent_dim, num_channels, n_dropout=3, n_layers=6):
         super(GeneratorDropout, self).__init__()
-        assert n_dropout <= n_layers
+        assert n_dropout <= n_layers, "n_dropout should be less than or equal to n_layers."
+        assert n_dropout > 0, "n_dropout should be greater than 0."
         
         self.latent_dim = latent_dim
         self.num_features = num_features
@@ -141,8 +142,8 @@ class GeneratorDropout(BaseModel):
             self.net.append(GeneratorBlockDropout(num_features * layers[i], num_features * layers[i+1], 4, 2, 1))
             
             
-        for i in range(n_dropout, n_layers+1):
-            self.net.append(GeneratorBlockDropout(num_features * layers[i], num_features * layers[i+1], 4, 2, 1))
+        for i in range(n_dropout, n_layers):
+            self.net.append(GeneratorBlock(num_features * layers[i], num_features * layers[i+1], 4, 2, 1))
         
         self.net.append(nn.Sequential(
             nn.ConvTranspose2d(num_features, num_channels, 4, 2, 4, bias=False),
@@ -160,7 +161,8 @@ class GeneratorDropout(BaseModel):
 class DiscriminatorDropout(BaseModel):
     def __init__(self, num_features, num_channels, n_dropout=3, n_layers=6):
         super(DiscriminatorDropout, self).__init__()
-        assert n_dropout <= n_layers
+        assert n_dropout <= n_layers, "n_dropout should be less than or equal to n_layers."
+        assert n_dropout > 0, "n_dropout should be greater than 0."
         
         self.num_features = num_features
         self.num_channels = num_channels
@@ -169,15 +171,16 @@ class DiscriminatorDropout(BaseModel):
         self.net = nn.ModuleList()
         self.net.append(nn.Sequential(
             nn.Conv2d(num_channels, num_features, 4, 2, 4, bias=False),
-            nn.LeakyReLU(0.2, inplace=True)
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Dropout(0.5)
         ))
         
         layers = [2 ** i for i in range(0, n_layers+1)]
-        for i in range(n_dropout):
+        for i in range(n_dropout-1):
             self.net.append(DiscriminatorBlockDropout(num_features * layers[i], num_features * layers[i+1], 4, 2, 1))
             
-        for i in range(n_dropout, n_layers+1):
-            self.net.append(DiscriminatorBlockDropout(num_features * layers[i], num_features * layers[i+1], 4, 2, 1))
+        for i in range(n_dropout-1, n_layers):
+            self.net.append(DiscriminatorBlock(num_features * layers[i], num_features * layers[i+1], 4, 2, 1))
         
         self.net.append(nn.Sequential(
             nn.Conv2d(num_features * (2 ** n_layers), 1, 6, 1, 0),
