@@ -59,8 +59,9 @@ class FolderDataset(Dataset):
 
 
 class NpzDataset(Dataset):
-    def __init__(self, data_dir, img_shape, transform=None):
+    def __init__(self, data_dir, img_shape=(1, 762, 762), transform=None):
         self.samples = [os.path.join(data_dir, entry) for entry in os.listdir(data_dir) if entry.endswith('_cb4240_ce4340.npz')]
+        # self.samples = self.samples[:len(self.samples)//2]
         self.img_shape = img_shape
         self.transform = transform
     
@@ -88,10 +89,34 @@ class NpzDataset(Dataset):
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
+        
         """
-        
+        """
+        mean, std = np.mean(flux, axis=1), np.std(flux, axis=1)
         flux.resize(self.img_shape)
+        flux[-1][-644:-644+58] = mean
+        flux[-1][-644+58:-644+58+58] = std
+        """
+        min_flux, max_flux = flux.min(), flux.max()
+        """
+        print(np.min(flux, axis=0), np.max(flux, axis=0))
+
+        # flux.resize(self.img_shape)
+        print("Before numpy to tensor: ")
+        print({"flux.shape": flux.shape,
+               "flux.dtype": flux.dtype,
+               "flux.min()": flux.min(),
+               "flux.max()": flux.max(),
+               "flux.mean()": flux.mean(),
+               "flux.std()": flux.std()})
+        """
+        flux.resize(self.img_shape)
+        # replace first zero padded with mean and std
+        flux[-1][-644:-644+58] = min_flux
+        flux[-1][-644+58:-644+58+58] = max_flux
+        flux = 2 * (flux - flux.min()) / (flux.max() - flux.min()) - 1
         
+
         if self.transform is not None:
             flux = self.transform(flux)
         return (flux, self.samples[index])
