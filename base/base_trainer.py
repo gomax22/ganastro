@@ -113,8 +113,7 @@ class BaseTrainer:
         :param save_best: if True, rename the saved checkpoint to 'model_best.pth'
         """
         generator_state = {
-            'arch': type(self.models[0]).__name__, 
-            'epoch': epoch,
+            'type': type(self.models[0].module).__name__ if type(self.models[0]).__name__ == 'DataParallel' else type(self.models[0]).__name__ , 
             'state_dict': self.models[0].state_dict(),
             'optimizer': self.optimizers[0].state_dict(),
             'monitor_best': self.mnt_best[0],
@@ -122,8 +121,7 @@ class BaseTrainer:
         }
         
         discriminator_state = {
-            'arch': type(self.models[1]).__name__, 
-            'epoch': epoch,
+            'type': type(self.models[1].module).__name__ if type(self.models[1]).__name__ == 'DataParallel' else type(self.models[1]).__name__, 
             'state_dict': self.models[1].state_dict(),
             'optimizer': self.optimizers[1].state_dict(),
             'monitor_best': self.mnt_best[1],
@@ -131,6 +129,7 @@ class BaseTrainer:
         }
         
         state = {
+            'epoch': epoch,
             'generator': generator_state,
             'discriminator': discriminator_state
         }
@@ -156,13 +155,13 @@ class BaseTrainer:
         self.mnt_best = [checkpoint['generator']['monitor_best'], checkpoint['discriminator']['monitor_best']]
 
         # load architecture params from checkpoint.
-        if checkpoint['generator']['config']['arch'] != self.config['arch']:
+        if checkpoint['generator']['type'] != self.config['generator']['type']:
             self.logger.warning("Warning: Architecture configuration (Generator) given in config file is different from that of "
                                 "checkpoint. This may yield an exception while state_dict is being loaded.")
         self.models[0].load_state_dict(checkpoint['generator']['state_dict'])
         
         # load architecture params from checkpoint.
-        if checkpoint['discriminator']['config']['arch'] != self.config['arch']:
+        if checkpoint['discriminator']['type'] != self.config['discriminator']['type']:
             self.logger.warning("Warning: Architecture configuration (Discriminator) given in config file is different from that of "
                                 "checkpoint. This may yield an exception while state_dict is being loaded.")
         self.models[1].load_state_dict(checkpoint['discriminator']['state_dict'])
