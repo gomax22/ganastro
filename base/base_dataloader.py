@@ -42,7 +42,7 @@ class BaseDataLoader(DataLoader):
             assert split < self.n_samples, "validation set size is configured to be larger than entire dataset."
             len_valid = split
         else:
-            len_valid = int(self.n_samples * split)
+            len_valid = int(np.ceil(self.n_samples * split))
 
         valid_idx = idx_full[0:len_valid]
         train_idx = np.delete(idx_full, np.arange(0, len_valid))
