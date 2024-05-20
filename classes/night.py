@@ -22,7 +22,40 @@ class Night:
         entries = sorted([os.path.join(night_path, entry) for entry in os.listdir(night_path) if entry.endswith("s1d_A.fits.gz")])
         observations: List[Observation] = [Observation.from_file(entry).preprocess() for entry in entries]
         return cls(cutoff_begin=cutoff_begin, cutoff_end=cutoff_end, observations=observations, entries=entries)
-                    
+    
+    def select(self, num_samples: int, region: str | None = 'center', verbose: bool = True):
+        """
+        Selects a subset of observations based on the specified region.
+
+        Args:
+            num_samples (int): The number of observations to select.
+            region (str, optional): The region from which to select the observations. 
+                Valid values are 'top', 'bottom', or 'center'. Defaults to 'center'.
+            verbose (bool, optional): Whether to print the selection information. Defaults to True.
+
+        Returns:
+            self: The modified instance of the class.
+
+        Raises:
+            AssertionError: If the number of samples is greater than the number of observations.
+
+        """
+        assert num_samples <= len(self.observations), "Number of samples must be less than or equal to the number of observations."
+        if verbose: print(f"Selecting {num_samples} observations from: {region}. (total: {len(self.observations)})")
+        
+        if region == 'top':
+            self.entries = self.entries[:num_samples]
+            self.observations = self.observations[:num_samples]
+        elif region == 'bottom':
+            self.entries = self.entries[-num_samples:]
+            self.observations = self.observations[-num_samples:]
+        else:
+            start = len(self.observations) // 2 - num_samples // 2
+            end = start + num_samples
+            self.entries = self.entries[start:end]
+            self.observations = self.observations[start:end]
+        if verbose: print(f"Selected {num_samples} observations from: {region}. (total: {len(self.observations)})")
+        return self
                     
     def interpolate(self, progress=True, verbose=True):
         # check if all observations have the same number of pixels
