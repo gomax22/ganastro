@@ -1,13 +1,9 @@
 # https://github.com/songquanpeng/pytorch-template/blob/master/data/dataset.py
 import os
-import torch
 import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
-
-
 from utils.file import list_all_images, list_sub_folders, exist_cache, load_cache, save_cache, safe_filename
-
 
 class DefaultDataset(Dataset):
     """ No label. """
