@@ -1,0 +1,53 @@
+{
+    "name": "GANASTRO",
+    "n_gpu": 4,
+
+    "generator": {
+        "type": "Generator",
+        "args": {
+            "num_features": 16,
+            "latent_dim": 100,
+            "num_channels": 1,
+            "n_layers": 6
+        }
+    },
+    "discriminator": {
+        "type": "DiscriminatorDropout",
+        "args": {
+            "num_features": 4,
+            "num_channels": 1,
+            "n_dropout": 3,
+            "n_layers": 6
+        }
+    },
+    "data_loader": {
+        "type": "NpzDataLoader",
+        "args":{
+            "data_dir": "/projects/data/HARPN/K9_preprocessed/",
+            "img_shape": [1, 762, 762],
+            "batch_size": 6,
+            "shuffle": true,
+            "num_workers": 2
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.1
+        }
+    },
+    "loss": "inpaint_loss",
+    "metrics": [],
+    "inpainter": {
+        "epochs": 300,
+
+        "save_dir": "saved/",
+        "save_period": 20,
+        "verbosity": 2,
+        
+        "monitor": "off",
+        "early_stop": 10,
+
+        "tensorboard": true
+    }
+}
