@@ -93,7 +93,7 @@ class NpzDataset(Dataset):
         flux[-1][-644:-644+58] = mean
         flux[-1][-644+58:-644+58+58] = std
         """
-        min_flux, max_flux = flux.min(), flux.max()
+        min_flux, max_flux = flux.min(axis=1), flux.max(axis=1)
         """
         print(np.min(flux, axis=0), np.max(flux, axis=0))
 
@@ -108,8 +108,8 @@ class NpzDataset(Dataset):
         """
         flux.resize(self.img_shape)
         # replace first zero padded with mean and std
-        flux[-1][-644:-644+58] = min_flux
-        flux[-1][-644+58:-644+58+58] = max_flux
+        flux[0, -1, -644:-644+58] = min_flux
+        flux[0, -1, -644+58:-644+58+58] = max_flux
         flux = 2 * (flux - flux.min()) / (flux.max() - flux.min()) - 1
         
 
