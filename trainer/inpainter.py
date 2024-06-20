@@ -31,18 +31,26 @@ class Inpainter(BaseInpainter):
         self.train_metrics = [MetricTracker('inpaint_loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer),
                               MetricTracker('context_loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer),
                               MetricTracker('perceptual_loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer),
-                              MetricTracker('perceptual_loss_weighted', *[m.__name__ for m in self.metric_ftns], writer=self.writer)]
+                              MetricTracker('perceptual_loss_weighted', *[m.__name__ for m in self.metric_ftns], writer=self.writer),
+                              MetricTracker('z_grad', *[m.__name__ for m in self.metric_ftns], writer=self.writer), 
+                              MetricTracker('average_mse_inside_mask', *[m.__name__ for m in self.metric_ftns], writer=self.writer)]
 
         
         # predefined  mask
-        mask = np.ones((data_loader.batch_size, 58, 10000), dtype=np.float32)
-        start = mask.shape[1] // 5
+        mask = np.ones((58, 10000), dtype=np.float32)
+        start = mask.shape[0] // 5
         end = 4 * start
-        mask[:, start:end, :] = 0.0
+        mask[start:end, :] = 0.0
         
         # with resize, we mask also additional parameters such as min-max normalization params
-        mask.resize(data_loader.batch_size, 1, 762, 762) # format NCHW
-        self.mask = torch.from_numpy(mask).to(self.device)
+        mask.resize(1, 1, 762, 762) # format NCHW
+        self.mask = torch.from_numpy(mask).to(device)
+        print(self.mask.shape)
+                
+        # eval models
+        for idx in range(len(self.models)):
+            self.models[idx].eval()
+
         
     def _train_epoch(self, epoch):
         """
@@ -51,16 +59,16 @@ class Inpainter(BaseInpainter):
         :param epoch: Integer, current training epoch.
         :return: A log that contains average loss and metric in this epoch.
         """
-
-        for idx in range(len(self.models)):
-            self.models[idx].eval()
-        
         for idx in range(len(self.train_metrics)):
             self.train_metrics[idx].reset()
             
             
         for batch_idx, (img, _) in enumerate(self.data_loader):
+
+            # stack mask on dim 0 to match batch size
+            mask = torch.cat([self.mask] * img.size(0), dim=0).to(self.device)
             
+            real_labels = torch.ones(img.size(0)).to(self.device)
             real_imgs = img.to(self.device)
             self.optimizer.zero_grad()
             
@@ -71,15 +79,29 @@ class Inpainter(BaseInpainter):
             fake_preds = self.models[1](generated_imgs).view(-1)
             
             # compute loss
-            inpaint_loss, c_loss, prior_loss, prior_loss_weighted = self.criterion(real_imgs, generated_imgs, self.mask, fake_preds, lamb=0.1)
+            inpaint_loss, c_loss, prior_loss, prior_loss_weighted = self.criterion(
+                real_imgs, generated_imgs, mask, fake_preds, real_labels, lamb=0.1)
+            
             inpaint_loss.backward()
             self.optimizer.step()
-            
+
             self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
+            
+            gradsum = torch.sum(self.parameters.grad.detach().cpu() ** 2)
+            if gradsum > 1e-5:
+                self.train_metrics[4].update('z_grad', gradsum.item())
+                    
+            # clamp parameters to [-1, 1]
+            self.parameters.data.clamp_(-1, 1)
+            
             self.train_metrics[0].update('inpaint_loss', inpaint_loss.item())
             self.train_metrics[1].update('context_loss', c_loss.item())
             self.train_metrics[2].update('perceptual_loss', prior_loss.item())
             self.train_metrics[3].update('perceptual_loss_weighted', prior_loss_weighted.item())
+            
+            # rmse = torch.sqrt(torch.sum((real_imgs * (1 - self.mask) - generated_imgs * (1 - self.mask)) ** 2) / torch.sum(1 - self.mask))
+            mse = torch.sum((real_imgs * torch.abs(1 - mask) - generated_imgs * torch.abs(1 - mask)) ** 2) / torch.abs(1 - mask).sum()
+            self.train_metrics[5].update('average_mse_inside_mask', mse.item())
             
             if batch_idx % self.log_step == 0:
                 self.logger.debug('Inpaint Epoch: {} {} Inpaint_Loss: {:.6f} Context_Loss: {:.6f} Prior_Loss: {:.6f} Prior_Loss_Weighted: {:.6f}'.format(
@@ -91,9 +113,10 @@ class Inpainter(BaseInpainter):
                     prior_loss_weighted.item())
                 )
                 self.writer.add_image('input', make_grid(img.cpu(), nrow=8, normalize=True))
-                self.writer.add_image('masked_input', make_grid((real_imgs * self.mask).detach().cpu(), nrow=8, normalize=True))
-                self.writer.add_image('inpainted', make_grid(generated_imgs.cpu(), nrow=8, normalize=True))
-
+                self.writer.add_image('masked_input', make_grid((real_imgs * mask).detach().cpu(), nrow=8, normalize=True))
+                self.writer.add_image('generated', make_grid(generated_imgs.cpu(), nrow=8, normalize=True))
+                self.writer.add_image('inpainted', make_grid((real_imgs * mask + generated_imgs * (1 - mask)).detach().cpu(), nrow=8, normalize=True))
+                self.writer.add_image('mask', make_grid(mask.cpu(), nrow=8, normalize=True))
             if batch_idx == self.len_epoch:
                 break
         
@@ -111,3 +134,4 @@ class Inpainter(BaseInpainter):
             total = self.len_epoch
         return base.format(current, total, 100.0 * current / total)
         
+

@@ -70,7 +70,7 @@ def main(args):
     metrics = [getattr(module_metric, met) for met in config['metrics']]
 
     # get zhat and its optimizer
-    parameters = nn.Parameter(torch.randn((data_loader.batch_size, generator.module.latent_dim, 1, 1), dtype=torch.float32).to(device))
+    parameters = nn.Parameter(torch.FloatTensor(data_loader.batch_size, generator.module.latent_dim, 1, 1).uniform_(-1, 1).to(device))
     logger.info(f"Parameters shape: {parameters.shape}")
     optimizer = config.init_obj('optimizer', torch.optim, [parameters])
     
@@ -109,8 +109,10 @@ def main(args):
 if __name__ == '__main__':
     
     args = argparse.ArgumentParser(description='Inpainting with GANASTRO')
-    args.add_argument('-c', '--config', default=None, type=str,
+    args.add_argument('-c', '--config', default=None, type=str, required=True,
                       help='config file path (default: None)')
+    args.add_argument('--checkpoint', default=None, required=False,
+                      help='path to checkpoint file for loading parameters')
     args.add_argument('-r', '--resume', default=None, type=str,
                       help='path to latest checkpoint (default: None)')
     args.add_argument('-d', '--device', default=None, type=str,
