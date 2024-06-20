@@ -44,15 +44,24 @@ class Night:
         if verbose: print(f"Selecting {num_samples} observations from: {region}. (total: {len(self.observations)})")
         
         if region == 'top':
-            self.entries = self.entries[:num_samples]
+            try:
+                self.entries = self.entries[:num_samples]
+            except AttributeError:
+                pass
             self.observations = self.observations[:num_samples]
         elif region == 'bottom':
-            self.entries = self.entries[-num_samples:]
+            try:
+                self.entries = self.entries[-num_samples:]
+            except AttributeError:
+                pass
             self.observations = self.observations[-num_samples:]
         else:
             start = len(self.observations) // 2 - num_samples // 2
             end = start + num_samples
-            self.entries = self.entries[start:end]
+            try:
+                self.entries = self.entries[start:end]
+            except AttributeError:
+                pass
             self.observations = self.observations[start:end]
         if verbose: print(f"Selected {num_samples} observations from: {region}. (total: {len(self.observations)})")
         return self
@@ -178,8 +187,108 @@ class Night:
                 self.generate_night(cb[idx*samples_per_night:(idx+1)*samples_per_night], out_path, date, idx)
                 pbar.update(1)
             pbar.close()
+    
+    def augment_night(self, observations, kernel, samples_per_night, output_dir, date, idx):
         
+        ws = kernel.shape[-1]
+        samples = []
+
+        for obs_i in range(0, len(observations) - ws + 1):
+            samples.append(Observation.from_observations([obs for obs in observations[obs_i:obs_i+ws]], self.wave_ref, weights=kernel))
+
+        night = Night.from_observations(samples, wave_ref=self.wave_ref, cutoff_begin=self.cutoff_begin, cutoff_end=self.cutoff_end) \
+            .interpolate(progress=False, verbose=False)
+
+        # select center region
+        night.select(samples_per_night, region='center', verbose=False)
+
+        # save full night
+        # cutoff_str = f"cb{int(night.cutoff_begin)}_ce{int(night.cutoff_end)}" if night.cutoff_begin is not None and night.cutoff_end is not None else "full"
+        # out_fname = os.path.join(output_dir, f"night_{date}_{idx}_{cutoff_str}.npz")
+        # night.save(out_fname)
+
+        out_fname = os.path.join(output_dir, f"night_{date}_{idx}.npz")
+        night.save(out_fname)
         
+        # TODO: extend to other options (cutoff-begin yes, cutoff-end no, and viceversa)
+        if night.cutoff_begin is not None and night.cutoff_end is not None:
+            # save cut night
+            out_fname = os.path.join(output_dir, f"night_{date}_{idx}_cb{int(night.cutoff_begin)}_ce{int(night.cutoff_end)}.npz")
+            night.cutoff(verbose=False)
+            night.save(out_fname)
+        
+    def augment(self, window_size, num_filters, samples_per_night, out_path, date, concurrency=True, verbose=True):
+        if verbose: print(f"Augmenting night with window size: {window_size}")
+
+        pad = window_size // 2
+        kernels = np.random.default_rng().dirichlet(tuple([1. for _ in range(window_size)]), num_filters)[:, None, :]
+
+        samples: List[Observation] = [self.observations[0]] * pad + self.observations + [self.observations[-1]] * pad
+        if concurrency:
+            pbar = tqdm(total=num_filters, desc="Augmenting nights...")
+        
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                futures = {
+                    executor.submit(
+                        self.augment_night, 
+                        samples, 
+                        kernel, 
+                        samples_per_night, 
+                        out_path, 
+                        date, 
+                        idx
+                    ) for idx, kernel in enumerate(kernels)
+                }
+                
+                for future in concurrent.futures.as_completed(futures):
+                    pbar.update(1)
+            pbar.close()
+        else: 
+            pbar = tqdm(total=num_filters, desc="Augmenting nights...")
+            for idx, kernel in enumerate(kernels):
+                self.augment_night(
+                    samples, 
+                    kernel, 
+                    samples_per_night, 
+                    out_path, 
+                    date, 
+                    idx
+                )
+                pbar.update(1)
+            pbar.close()
+
+    
+    def augment_seq(self, window_size, num_filters, samples_per_night, out_path, date, verbose=True):
+        if verbose: print(f"Augmenting night with window size: {window_size}")
+
+        pad = window_size // 2
+        kernels = np.random.default_rng().dirichlet(tuple([1. for _ in range(window_size)]), num_filters)[:, None, :]
+
+        observations = [self.observations[0]] * pad + self.observations + [self.observations[-1]] * pad
+        pbar = tqdm(total=num_filters * len(observations), desc="Augmenting nights...")
+
+        for idx, kernel in enumerate(kernels):
+            samples = []
+
+            for obs_i in range(0, len(observations) - window_size + 1):
+                print(f"idx: {idx}, obs_i: {obs_i}")
+                samples.append(Observation.from_observations([obs for obs in observations[obs_i:obs_i+window_size]], self.wave_ref, weights=kernel))
+            
+            night = Night.from_observations(samples, wave_ref=self.wave_ref, cutoff_begin=self.cutoff_begin, cutoff_end=self.cutoff_end) \
+                .interpolate(progress=False, verbose=False)
+            
+            # select center region
+            night.select(samples_per_night, region='center', verbose=False)
+
+            # save full night
+            cutoff_str = f"cb{int(night.cutoff_begin)}_ce{int(night.cutoff_end)}" if night.cutoff_begin is not None and night.cutoff_end is not None else "full"
+            out_fname = os.path.join(out_path, f"night_{date}_{idx}_{cutoff_str}.npz")
+            night.save(out_fname)
+
+            pbar.update(1)    
+        pbar.close()
+
+    
     def save(self, fname):
         
         # initial additional parameters
@@ -230,5 +339,4 @@ class Night:
             snr=np.array(snr, dtype=np.float32),
             names=np.array(names)
         )
-        
         

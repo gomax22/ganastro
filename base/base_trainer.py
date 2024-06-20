@@ -154,32 +154,50 @@ class BaseTrainer:
         self.mnt_best = [checkpoint['generator']['monitor_best'], checkpoint['discriminator']['monitor_best']]
 
         # load architecture params from checkpoint.
-        if checkpoint['generator']['type'] != self.config['generator']['type']:
-            self.logger.warning("Warning: Architecture configuration (Generator) given in config file is different from that of "
-                                "checkpoint. This may yield an exception while state_dict is being loaded.")
-        self.models[0].load_state_dict(checkpoint['generator']['state_dict'])
+        # load generator
+        try:
+            if checkpoint['generator']['type'] != self.config['generator']['type']:
+                self.logger.warning("Warning: Architecture configuration (Generator) given in config file is different from that of "
+                                    "checkpoint. This may yield an exception while state_dict is being loaded.")
+            self.models[0].load_state_dict(checkpoint['generator']['state_dict'])
+        except KeyError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Generator state_dict not found in checkpoint. Generator model not being resumed.")
         
-        # load architecture params from checkpoint.
-        if checkpoint['discriminator']['type'] != self.config['discriminator']['type']:
-            self.logger.warning("Warning: Architecture configuration (Discriminator) given in config file is different from that of "
-                                "checkpoint. This may yield an exception while state_dict is being loaded.")
-        self.models[1].load_state_dict(checkpoint['discriminator']['state_dict'])
-        
-
-        # load optimizer state from checkpoint only when optimizer type is not changed.
-        if checkpoint['generator']['config']['optimizer']['type'] != self.config['optimizer']['type']:
-            self.logger.warning("Warning: Optimizer type (Generator) given in config file is different from that of checkpoint. "
-                                "Optimizer parameters not being resumed.")
-        else:
+        # load discriminator
+        try:
+            if checkpoint['discriminator']['type'] != self.config['discriminator']['type']:
+                self.logger.warning("Warning: Architecture configuration (Discriminator) given in config file is different from that of "
+                                    "checkpoint. This may yield an exception while state_dict is being loaded.")
+            self.models[1].load_state_dict(checkpoint['discriminator']['state_dict'])
+        except KeyError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Discriminator state_dict not found in checkpoint. Discriminator model not being resumed.")
+         
+        # load generator optimizer            
+        try:
+            if checkpoint['generator']['config']['optimizer']['type'] != self.config['optimizer']['type']:
+                self.logger.warning("Warning: Optimizer type (Generator) given in config file is different from that of checkpoint. "
+                                    "Optimizer parameters not being resumed.")
             self.optimizers[0].load_state_dict(checkpoint['generator']['optimizer'])
-            
-            
-        # load optimizer state from checkpoint only when optimizer type is not changed.
-        if checkpoint['discriminator']['config']['optimizer']['type'] != self.config['optimizer']['type']:
-            self.logger.warning("Warning: Optimizer type (Discriminator) given in config file is different from that of checkpoint. "
-                                "Optimizer parameters not being resumed.")
-        else:
-            self.optimizers[1].load_state_dict(checkpoint['discriminator']['optimizer'])
-            
+        except KeyError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Generator optimizer not found in checkpoint. Generator optimizer not being resumed.")
+        except ValueError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Generator optimizer parameters not being resumed.")
         
+        # load discriminator optimizer
+        try:
+            if checkpoint['discriminator']['config']['optimizer']['type'] != self.config['optimizer']['type']:
+                self.logger.warning("Warning: Optimizer type (Discriminator) given in config file is different from that of checkpoint. "
+                                    "Optimizer parameters not being resumed.")
+            self.optimizers[1].load_state_dict(checkpoint['discriminator']['optimizer'])
+        except KeyError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Discriminator optimizer not found in checkpoint. Discriminator optimizer not being resumed.")
+        except ValueError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Discriminator optimizer parameters not being resumed.")
+            
         self.logger.info("Checkpoint loaded. Resume training from epoch {}".format(self.start_epoch))

@@ -67,7 +67,8 @@ def main(args):
 
         # save the night
         date = night_path.split(os.sep)[-1]
-        out_fname = os.path.join(output, f"night_{date}_cb{int(night.cutoff_begin)}_ce{int(night.cutoff_end)}.npz")
+        cutoff_str = f"cb{int(night.cutoff_begin)}_ce{int(night.cutoff_end)}" if cutoff_begin is not None and cutoff_end is not None else "full"
+        out_fname = os.path.join(output, f"night_{date}_{cutoff_str}.npz")
         night.save(out_fname)
 
         print("\n")

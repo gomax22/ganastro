@@ -65,7 +65,16 @@ class Observation:
         
     
     @classmethod
-    def from_observations(cls, observations, wave_ref):
+    def from_observations(cls, observations, wave_ref, weights=None, noise=None):
+        assert weights is None or len(observations) == weights.shape[1], "The number of weights must be equal to the number of observations"
+        assert noise is None or len(observations) == noise.shape[0], "The number of noise must be equal to the number of observations"
+
+        if weights is None:
+            weights = np.ones(len(observations)) / len(observations)
+
+        if noise is None:
+            noise = np.zeros(len(observations))
+        
         parent_dir = observations[0].parent_dir
         name = [obs.name for obs in observations]
         real = False
@@ -87,30 +96,22 @@ class Observation:
         bervmx = 0.0
         snr = 0.0
         
-        for obs in observations:
-            humidity += obs.humidity
-            pressure += obs.pressure
-            windspeed += obs.windspeed
-            winddir += obs.winddir
-            temp10m += obs.temp10m
-            airmass += obs.airmass
-            berv += obs.berv
-            bervmx += obs.bervmx
-            snr += obs.snr
-            flux += obs.flux
-            error += obs.error
-        
-        humidity /= len(observations)
-        pressure /= len(observations)
-        windspeed /= len(observations)
-        winddir /= len(observations)
-        temp10m /= len(observations)
-        airmass /= len(observations)
-        berv /= len(observations)
-        bervmx /= len(observations)
-        snr /= len(observations)  
-        flux /= len(observations)
-        error /= len(observations)       
+        # TODO: very inefficient implementation, manual convolution
+        # put all the features inside a np.ndarray and perform a dot product with the weights
+        # most efficient implementation would be a batched dot product, but using this OOP approach this is not possible
+        # (B, 1, seq_len) @ (seq_len, n_features) -> (B, 1, n_features) and then stack results on second dimension
+        for obs, w, n in zip(observations, weights.T, noise):
+            humidity += (w * obs.humidity + n)
+            pressure += (w * obs.pressure + n)
+            windspeed += (w * obs.windspeed + n)
+            winddir += (w * obs.winddir + n)
+            temp10m += (w * obs.temp10m + n)
+            airmass += (w * obs.airmass + n)
+            berv += (w * obs.berv + n)
+            bervmx += (w * obs.bervmx + n)
+            snr += (w * obs.snr + n)
+            flux += (w * obs.flux + n)
+            error += (w * obs.error + n)
         
         return cls(parent_dir=parent_dir, 
                    name=name, 

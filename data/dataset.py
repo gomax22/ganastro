@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
 from utils.file import list_all_images, list_sub_folders, exist_cache, load_cache, save_cache, safe_filename
+import random
 
 class DefaultDataset(Dataset):
     """ No label. """
@@ -57,6 +58,8 @@ class FolderDataset(Dataset):
 class NpzDataset(Dataset):
     def __init__(self, data_dir, img_shape=(1, 762, 762), transform=None):
         self.samples = [os.path.join(data_dir, entry) for entry in os.listdir(data_dir) if entry.endswith('_cb4240_ce4340.npz')]
+        # random.shuffle(self.samples)
+        # self.samples = self.samples[:64]
         # self.samples = self.samples[:len(self.samples)//2]
         self.img_shape = img_shape
         self.transform = transform
@@ -108,8 +111,8 @@ class NpzDataset(Dataset):
         """
         flux.resize(self.img_shape)
         # replace first zero padded with mean and std
-        flux[0, -1, -644:-644+58] = min_flux
-        flux[0, -1, -644+58:-644+58+58] = max_flux
+        flux[:, -1, -644:-644+58] = min_flux
+        flux[:, -1, -644+58:-644+58+58] = max_flux
         flux = 2 * (flux - flux.min()) / (flux.max() - flux.min()) - 1
         
 

@@ -24,9 +24,12 @@ class ConfigParser:
         self._config = _update_config(config, modification)
         self.resume = resume
 
-        # set save_dir where trained model and log will be saved.
-        save_dir = Path(self.config['trainer']['save_dir'])
-
+        # set save_dir where trained model and log will be saved. 
+        try:
+            save_dir = Path(self.config['trainer']['save_dir'])
+        except KeyError:
+            save_dir = Path(self.config['inpainter']['save_dir'])
+            
         exper_name = self.config['name']
         if run_id is None: # use timestamp as default run-id
             run_id = datetime.now().strftime(r'%m%d_%H%M%S')
