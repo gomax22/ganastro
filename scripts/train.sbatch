@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=ganastro
-#SBATCH --output=sscripts/ganastro_aug_8x4.out
-#SBATCH --error=sscripts/ganastro_aug_8x4.err
+#SBATCH --output=train.out
+#SBATCH --error=train.err
 #SBATCH --ntasks=1                                                              
 #SBATCH --nodes=1                                                               
 #SBATCH --partition=xgpu
-#SBATCH --mem=88000
+#SBATCH --mem=150000
 
 python train.py --config dcgan.json
+# python train.py --resume experiments/training/<path-to-checkpoint> --config experiments/training/<path-to-config>

@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=wganastro
-#SBATCH --output=scripts/wganastro_l.out
-#SBATCH --error=scripts/wganastro_l.err
+#SBATCH --job-name=ganpainting
+#SBATCH --output=inpaint.out
+#SBATCH --error=inpaint.err
 #SBATCH --ntasks=1                                                              
 #SBATCH --nodes=1                                                               
 #SBATCH --partition=xgpu
 #SBATCH --mem=88000
 
-python wgan_train.py --config wgan_l.json
+python ../inpaint.py --resume ../pretrained/0920_170346/checkpoint-epoch250.pth --config ../inpainting.json

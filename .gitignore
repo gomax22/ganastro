@@ -163,7 +163,11 @@ cython_debug/
 #.idea/
 
 
-saved/
-ssaved/
-inpaint/
 .vscode/
+events**
+info**
+blended/
+generated**
+original**
+spectrum**
+residual**

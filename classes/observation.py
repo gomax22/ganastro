@@ -5,14 +5,7 @@ import os
 # to compute BJD from MJD
 from astropy.time import Time
 from astropy import units as u, coordinates as coord
-
-"""
-    * read params from header
-    * get flux
-    * get error flux
-    * get wavelength
-
-"""
+from astropy.stats import sigma_clip
 
 class Observation:
     def __init__(self, **kwargs):
@@ -134,7 +127,6 @@ class Observation:
         
     @staticmethod
     def mjd_to_bjd(mjd, ra_deg, dec_deg):
-        
         # d : MJD value
         # UPDATE: Read RA, DEC from the header, in deg units. RA, DEC of the telescope pointing.
         # RA,DEC to compute the BJD precisely
@@ -150,7 +142,7 @@ class Observation:
         return t.tdb + ltt_bary # = BJD
    
    
-    def preprocess(self):
+    def preprocess(self, sigma_clipping=True):
         """    
         * remove nans
         * remove negative fluxes
@@ -171,6 +163,10 @@ class Observation:
         neg_mask = self.flux < 0.0
         self.flux[neg_mask] = 0.0
         self.error[neg_mask] = 0.0
+        
+        # sigma-clipping
+        if sigma_clipping:
+            self.flux = sigma_clip(self.flux, sigma_lower=6.0, sigma_upper=1.0, maxiters=None, cenfunc='median', stdfunc='std')
         
         return self
         

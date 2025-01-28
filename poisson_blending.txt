@@ -1,0 +1,612 @@
+img_shape: torch.Size([1, 1, 762, 762])
+min_flux: (1, 58)
+max_flux: (1, 58)
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180708_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180708_20/models/GANASTRO/0111_144805
+bounds: (22, 33)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9316052198410034, generated_img.max: 0.9935919046401978
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180708_20/poisson_11.npz
+saved spectra in blended/gann_4_night_20180708_20/obs_0
+{'images': {'blended': {'mae': 0.08962979,
+                        'mse': 0.017920678,
+                        'psnr': 23.4870548248291,
+                        'rmse': 0.13386814,
+                        'ssim': 0.23490460216999054},
+            'generated': {'mae': 0.07841029,
+                          'mse': 0.012776224,
+                          'psnr': 24.605337142944336,
+                          'rmse': 0.11303196,
+                          'ssim': 0.2274586409330368}},
+ 'spectra': {'blended': {'max_mae': 0.3125485,
+                         'max_mse': 0.10595667,
+                         'max_rmse': 0.32550988,
+                         'min_cosine': 0.96315396},
+             'generated': {'max_mae': 0.28070098,
+                           'max_mse': 0.08373962,
+                           'max_rmse': 0.289378,
+                           'min_cosine': 0.9686512}}}
+saved blended/gann_4_night_20180708_20/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180708_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180708_40/models/GANASTRO/0111_165628
+bounds: (17, 39)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.958196759223938, generated_img.max: 0.9905356168746948
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180708_40/poisson_11.npz
+saved spectra in blended/gann_4_night_20180708_40/obs_0
+{'images': {'blended': {'mae': 0.08954954,
+                        'mse': 0.01807459,
+                        'psnr': 23.449913024902344,
+                        'rmse': 0.13444178,
+                        'ssim': 0.27753862738609314},
+            'generated': {'mae': 0.0813609,
+                          'mse': 0.011576874,
+                          'psnr': 25.01008415222168,
+                          'rmse': 0.10759588,
+                          'ssim': 0.28468063473701477}},
+ 'spectra': {'blended': {'max_mae': 0.27162942,
+                         'max_mse': 0.084147215,
+                         'max_rmse': 0.29008138,
+                         'min_cosine': 0.9591457},
+             'generated': {'max_mae': 0.26058188,
+                           'max_mse': 0.07409897,
+                           'max_rmse': 0.27221125,
+                           'min_cosine': 0.9727257}}}
+saved blended/gann_4_night_20180708_40/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180708_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180708_60/models/GANASTRO/0111_170354
+bounds: (11, 44)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9574019908905029, generated_img.max: 0.9911291599273682
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180708_60/poisson_11.npz
+saved spectra in blended/gann_4_night_20180708_60/obs_0
+{'images': {'blended': {'mae': 0.097684555,
+                        'mse': 0.021602001,
+                        'psnr': 22.6756591796875,
+                        'rmse': 0.14697619,
+                        'ssim': 0.3293679654598236},
+            'generated': {'mae': 0.07457596,
+                          'mse': 0.009765421,
+                          'psnr': 25.779115676879883,
+                          'rmse': 0.09882014,
+                          'ssim': 0.3316959738731384}},
+ 'spectra': {'blended': {'max_mae': 0.21565358,
+                         'max_mse': 0.060355186,
+                         'max_rmse': 0.24567293,
+                         'min_cosine': 0.9587989},
+             'generated': {'max_mae': 0.261417,
+                           'max_mse': 0.07457644,
+                           'max_rmse': 0.27308688,
+                           'min_cosine': 0.97268015}}}
+saved blended/gann_4_night_20180708_60/poisson_original.npz
+############################
+img_shape: torch.Size([1, 1, 762, 762])
+min_flux: (1, 58)
+max_flux: (1, 58)
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180722_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180722_20/models/GANASTRO/0112_004516
+bounds: (22, 33)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.952161431312561, generated_img.max: 0.9827911853790283
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180722_20/poisson_11.npz
+saved spectra in blended/gann_4_night_20180722_20/obs_0
+{'images': {'blended': {'mae': 0.0670586,
+                        'mse': 0.009218088,
+                        'psnr': 26.374191284179688,
+                        'rmse': 0.09601088,
+                        'ssim': 0.4884032905101776},
+            'generated': {'mae': 0.10222211,
+                          'mse': 0.016145231,
+                          'psnr': 23.277786254882812,
+                          'rmse': 0.12706389,
+                          'ssim': 0.4770163297653198}},
+ 'spectra': {'blended': {'max_mae': 0.07649803,
+                         'max_mse': 0.0116333375,
+                         'max_rmse': 0.10785795,
+                         'min_cosine': 0.9868868},
+             'generated': {'max_mae': 0.12294568,
+                           'max_mse': 0.023079343,
+                           'max_rmse': 0.15191887,
+                           'min_cosine': 0.9733319}}}
+saved blended/gann_4_night_20180722_20/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180722_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180722_40/models/GANASTRO/0112_005115
+bounds: (17, 39)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9517418742179871, generated_img.max: 0.9811369776725769
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180722_40/poisson_11.npz
+saved spectra in blended/gann_4_night_20180722_40/obs_0
+{'images': {'blended': {'mae': 0.08087704,
+                        'mse': 0.014893355,
+                        'psnr': 24.290672302246094,
+                        'rmse': 0.122038335,
+                        'ssim': 0.4622109830379486},
+            'generated': {'mae': 0.09385619,
+                          'mse': 0.013953595,
+                          'psnr': 24.132402420043945,
+                          'rmse': 0.118125334,
+                          'ssim': 0.45949724316596985}},
+ 'spectra': {'blended': {'max_mae': 0.10628854,
+                         'max_mse': 0.021691699,
+                         'max_rmse': 0.14728102,
+                         'min_cosine': 0.9787419},
+             'generated': {'max_mae': 0.12223153,
+                           'max_mse': 0.022842739,
+                           'max_rmse': 0.15113814,
+                           'min_cosine': 0.973669}}}
+saved blended/gann_4_night_20180722_40/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180722_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180722_60/models/GANASTRO/0112_100453
+bounds: (11, 44)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9485257267951965, generated_img.max: 0.9817952513694763
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180722_60/poisson_11.npz
+saved spectra in blended/gann_4_night_20180722_60/obs_0
+{'images': {'blended': {'mae': 0.091272436,
+                        'mse': 0.021312505,
+                        'psnr': 22.7342529296875,
+                        'rmse': 0.14598803,
+                        'ssim': 0.45013970136642456},
+            'generated': {'mae': 0.085809454,
+                          'mse': 0.011960023,
+                          'psnr': 24.829280853271484,
+                          'rmse': 0.10936189,
+                          'ssim': 0.46485814452171326}},
+ 'spectra': {'blended': {'max_mae': 0.15924558,
+                         'max_mse': 0.04034625,
+                         'max_rmse': 0.20086376,
+                         'min_cosine': 0.9640572},
+             'generated': {'max_mae': 0.12121465,
+                           'max_mse': 0.022497833,
+                           'max_rmse': 0.14999278,
+                           'min_cosine': 0.97382313}}}
+saved blended/gann_4_night_20180722_60/poisson_original.npz
+############################
+img_shape: torch.Size([1, 1, 762, 762])
+min_flux: (1, 58)
+max_flux: (1, 58)
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180723_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180723_20/models/GANASTRO/0112_100957
+bounds: (22, 33)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9515633583068848, generated_img.max: 0.9878126978874207
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180723_20/poisson_11.npz
+saved spectra in blended/gann_4_night_20180723_20/obs_0
+{'images': {'blended': {'mae': 0.08861368,
+                        'mse': 0.01629202,
+                        'psnr': 23.900848388671875,
+                        'rmse': 0.1276402,
+                        'ssim': 0.41815048456192017},
+            'generated': {'mae': 0.07959691,
+                          'mse': 0.01148655,
+                          'psnr': 24.852611541748047,
+                          'rmse': 0.10717532,
+                          'ssim': 0.441757470369339}},
+ 'spectra': {'blended': {'max_mae': 0.26888958,
+                         'max_mse': 0.08063758,
+                         'max_rmse': 0.28396758,
+                         'min_cosine': 0.9712532},
+             'generated': {'max_mae': 0.225333,
+                           'max_mse': 0.05642522,
+                           'max_rmse': 0.23753993,
+                           'min_cosine': 0.9803347}}}
+saved blended/gann_4_night_20180723_20/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180723_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180723_40/models/GANASTRO/0112_122431
+bounds: (17, 39)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.929794192314148, generated_img.max: 0.9876454472541809
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180723_40/poisson_11.npz
+saved spectra in blended/gann_4_night_20180723_40/obs_0
+{'images': {'blended': {'mae': 0.08899125,
+                        'mse': 0.018494304,
+                        'psnr': 23.3502197265625,
+                        'rmse': 0.13599376,
+                        'ssim': 0.3584549129009247},
+            'generated': {'mae': 0.07975614,
+                          'mse': 0.01184095,
+                          'psnr': 24.820114135742188,
+                          'rmse': 0.10881613,
+                          'ssim': 0.36198335886001587}},
+ 'spectra': {'blended': {'max_mae': 0.2608297,
+                         'max_mse': 0.079757676,
+                         'max_rmse': 0.28241402,
+                         'min_cosine': 0.95779234},
+             'generated': {'max_mae': 0.24184133,
+                           'max_mse': 0.06466371,
+                           'max_rmse': 0.2542906,
+                           'min_cosine': 0.9660398}}}
+saved blended/gann_4_night_20180723_40/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180723_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180723_60/models/GANASTRO/0112_123707
+bounds: (11, 44)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9523177742958069, generated_img.max: 0.9880651235580444
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180723_60/poisson_11.npz
+saved spectra in blended/gann_4_night_20180723_60/obs_0
+{'images': {'blended': {'mae': 0.08980124,
+                        'mse': 0.02059434,
+                        'psnr': 22.883119583129883,
+                        'rmse': 0.14350729,
+                        'ssim': 0.29344794154167175},
+            'generated': {'mae': 0.07553836,
+                          'mse': 0.010455562,
+                          'psnr': 25.470584869384766,
+                          'rmse': 0.10225244,
+                          'ssim': 0.29685553908348083}},
+ 'spectra': {'blended': {'max_mae': 0.24705176,
+                         'max_mse': 0.0754576,
+                         'max_rmse': 0.2746955,
+                         'min_cosine': 0.9504706},
+             'generated': {'max_mae': 0.2537425,
+                           'max_mse': 0.07043705,
+                           'max_rmse': 0.26539978,
+                           'min_cosine': 0.96657336}}}
+saved blended/gann_4_night_20180723_60/poisson_original.npz
+############################
+img_shape: torch.Size([1, 1, 762, 762])
+min_flux: (1, 58)
+max_flux: (1, 58)
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180901_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180901_20/models/GANASTRO/0112_124529
+bounds: (22, 33)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9283570647239685, generated_img.max: 0.9943487048149109
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180901_20/poisson_11.npz
+saved spectra in blended/gann_4_night_20180901_20/obs_0
+{'images': {'blended': {'mae': 0.14441556,
+                        'mse': 0.11168405,
+                        'psnr': 15.540687561035156,
+                        'rmse': 0.33419162,
+                        'ssim': 0.4718751013278961},
+            'generated': {'mae': 0.14301443,
+                          'mse': 0.11076013,
+                          'psnr': 15.215082168579102,
+                          'rmse': 0.33280644,
+                          'ssim': 0.46628278493881226}},
+ 'spectra': {'blended': {'max_mae': 1.0393907,
+                         'max_mse': 1.1612787,
+                         'max_rmse': 1.0776265,
+                         'min_cosine': -0.62765425},
+             'generated': {'max_mae': 1.0481683,
+                           'max_mse': 1.1722761,
+                           'max_rmse': 1.0827171,
+                           'min_cosine': -0.6460436}}}
+saved blended/gann_4_night_20180901_20/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180901_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180901_40/models/GANASTRO/0112_154319
+bounds: (17, 39)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9281966090202332, generated_img.max: 0.993839681148529
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180901_40/poisson_11.npz
+saved spectra in blended/gann_4_night_20180901_40/obs_0
+{'images': {'blended': {'mae': 0.14134735,
+                        'mse': 0.08954988,
+                        'psnr': 16.499948501586914,
+                        'rmse': 0.29924884,
+                        'ssim': 0.3112841546535492},
+            'generated': {'mae': 0.12849464,
+                          'mse': 0.074802876,
+                          'psnr': 16.93604850769043,
+                          'rmse': 0.27350116,
+                          'ssim': 0.31800535321235657}},
+ 'spectra': {'blended': {'max_mae': 1.1061072,
+                         'max_mse': 1.3029838,
+                         'max_rmse': 1.1414832,
+                         'min_cosine': -0.6731124},
+             'generated': {'max_mae': 1.0484571,
+                           'max_mse': 1.1733558,
+                           'max_rmse': 1.0832155,
+                           'min_cosine': -0.64537585}}}
+saved blended/gann_4_night_20180901_40/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180901_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180901_60/models/GANASTRO/0112_154809
+bounds: (11, 44)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9285402297973633, generated_img.max: 0.9946293830871582
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180901_60/poisson_11.npz
+saved spectra in blended/gann_4_night_20180901_60/obs_0
+{'images': {'blended': {'mae': 0.13016012,
+                        'mse': 0.06504052,
+                        'psnr': 17.888761520385742,
+                        'rmse': 0.25503042,
+                        'ssim': 0.3022187054157257},
+            'generated': {'mae': 0.10671058,
+                          'mse': 0.052002124,
+                          'psnr': 18.520139694213867,
+                          'rmse': 0.22803974,
+                          'ssim': 0.31292229890823364}},
+ 'spectra': {'blended': {'max_mae': 1.0595891,
+                         'max_mse': 1.192974,
+                         'max_rmse': 1.0922334,
+                         'min_cosine': -0.6681882},
+             'generated': {'max_mae': 1.049026,
+                           'max_mse': 1.1739205,
+                           'max_rmse': 1.0834761,
+                           'min_cosine': -0.6468926}}}
+saved blended/gann_4_night_20180901_60/poisson_original.npz
+############################
+img_shape: torch.Size([1, 1, 762, 762])
+min_flux: (1, 58)
+max_flux: (1, 58)
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180904_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180904_20/models/GANASTRO/0112_155521
+bounds: (22, 33)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9194915890693665, generated_img.max: 0.9798199534416199
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180904_20/poisson_11.npz
+saved spectra in blended/gann_4_night_20180904_20/obs_0
+{'images': {'blended': {'mae': 0.1460932,
+                        'mse': 0.032480642,
+                        'psnr': 20.90435218811035,
+                        'rmse': 0.18022387,
+                        'ssim': 0.33373135328292847},
+            'generated': {'mae': 0.05657899,
+                          'mse': 0.005440271,
+                          'psnr': 28.077747344970703,
+                          'rmse': 0.07375819,
+                          'ssim': 0.5211142897605896}},
+ 'spectra': {'blended': {'max_mae': 0.2838,
+                         'max_mse': 0.086571366,
+                         'max_rmse': 0.29423013,
+                         'min_cosine': 0.95967734},
+             'generated': {'max_mae': 0.06556112,
+                           'max_mse': 0.007827765,
+                           'max_rmse': 0.08847466,
+                           'min_cosine': 0.99256754}}}
+saved blended/gann_4_night_20180904_20/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180904_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180904_40/models/GANASTRO/0113_112743
+bounds: (17, 39)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9503262042999268, generated_img.max: 0.9885967969894409
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180904_40/poisson_11.npz
+saved spectra in blended/gann_4_night_20180904_40/obs_0
+{'images': {'blended': {'mae': 0.074393,
+                        'mse': 0.015223704,
+                        'psnr': 24.195396423339844,
+                        'rmse': 0.12338438,
+                        'ssim': 0.3683664798736572},
+            'generated': {'mae': 0.06802092,
+                          'mse': 0.009318739,
+                          'psnr': 25.956298828125,
+                          'rmse': 0.09653362,
+                          'ssim': 0.37063759565353394}},
+ 'spectra': {'blended': {'max_mae': 0.30977383,
+                         'max_mse': 0.10612625,
+                         'max_rmse': 0.32577023,
+                         'min_cosine': 0.9592863},
+             'generated': {'max_mae': 0.28828314,
+                           'max_mse': 0.08852309,
+                           'max_rmse': 0.2975283,
+                           'min_cosine': 0.9697006}}}
+saved blended/gann_4_night_20180904_40/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20180904_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20180904_60/models/GANASTRO/0113_133658
+bounds: (11, 44)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9185531735420227, generated_img.max: 0.9895458221435547
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20180904_60/poisson_11.npz
+saved spectra in blended/gann_4_night_20180904_60/obs_0
+{'images': {'blended': {'mae': 0.07153931,
+                        'mse': 0.017113214,
+                        'psnr': 23.68728256225586,
+                        'rmse': 0.13081749,
+                        'ssim': 0.4073619544506073},
+            'generated': {'mae': 0.06786667,
+                          'mse': 0.008599159,
+                          'psnr': 26.2674560546875,
+                          'rmse': 0.092731655,
+                          'ssim': 0.4113798439502716}},
+ 'spectra': {'blended': {'max_mae': 0.32131928,
+                         'max_mse': 0.1163197,
+                         'max_rmse': 0.34105673,
+                         'min_cosine': 0.95340526},
+             'generated': {'max_mae': 0.28203976,
+                           'max_mse': 0.08546688,
+                           'max_rmse': 0.2923472,
+                           'min_cosine': 0.97160906}}}
+saved blended/gann_4_night_20180904_60/poisson_original.npz
+############################
+img_shape: torch.Size([1, 1, 762, 762])
+min_flux: (1, 58)
+max_flux: (1, 58)
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20210905_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20210905_20/models/GANASTRO/0112_184734
+bounds: (22, 33)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9575901031494141, generated_img.max: 0.9883676767349243
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20210905_20/poisson_11.npz
+saved spectra in blended/gann_4_night_20210905_20/obs_0
+{'images': {'blended': {'mae': 0.05272087,
+                        'mse': 0.0063177478,
+                        'psnr': 28.014976501464844,
+                        'rmse': 0.07948426,
+                        'ssim': 0.6038436889648438},
+            'generated': {'mae': 0.056314852,
+                          'mse': 0.0053072427,
+                          'psnr': 28.18073081970215,
+                          'rmse': 0.07285082,
+                          'ssim': 0.6066150665283203}},
+ 'spectra': {'blended': {'max_mae': 0.064636655,
+                         'max_mse': 0.008526665,
+                         'max_rmse': 0.09233994,
+                         'min_cosine': 0.9923964},
+             'generated': {'max_mae': 0.06487155,
+                           'max_mse': 0.006825195,
+                           'max_rmse': 0.08261474,
+                           'min_cosine': 0.99493414}}}
+saved blended/gann_4_night_20210905_20/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20210905_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20210905_40/models/GANASTRO/0112_224726
+bounds: (17, 39)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.962769627571106, generated_img.max: 0.9879635572433472
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20210905_40/poisson_11.npz
+saved spectra in blended/gann_4_night_20210905_40/obs_0
+{'images': {'blended': {'mae': 0.06685115,
+                        'mse': 0.013502464,
+                        'psnr': 24.716468811035156,
+                        'rmse': 0.116200104,
+                        'ssim': 0.5690227746963501},
+            'generated': {'mae': 0.06818702,
+                          'mse': 0.008807268,
+                          'psnr': 26.152164459228516,
+                          'rmse': 0.093847044,
+                          'ssim': 0.569819450378418}},
+ 'spectra': {'blended': {'max_mae': 0.2904514,
+                         'max_mse': 0.093401,
+                         'max_rmse': 0.30561578,
+                         'min_cosine': 0.9657717},
+             'generated': {'max_mae': 0.25649288,
+                           'max_mse': 0.07119095,
+                           'max_rmse': 0.26681632,
+                           'min_cosine': 0.9710176}}}
+saved blended/gann_4_night_20210905_40/poisson_original.npz
+############################
+Processing ('/projects/data/HARPN/K9_preprocessed_v2/night_20210905_cb4240_ce4340.npz',) and /home/m.gorsini/ganastro/gann_4_night_20210905_60/models/GANASTRO/0112_225226
+bounds: (11, 44)
+real_img.shape: (1, 58, 10000), real_img.dtype: float32, real_img.min: -1.0, real_img.max: 1.0
+generated_img.shape: (1, 58, 10000), generated_img.dtype: float32, generated_img.min: -0.9569575190544128, generated_img.max: 0.9881340265274048
+Start poisson blending...
+img_target.shape: (58, 10000)
+img_source.shape: (58, 10000)
+img_mask.shape: (58, 10000)
+img_target.dtype: float32
+img_source.dtype: float32
+img_mask.dtype: float32
+saved blended/gann_4_night_20210905_60/poisson_11.npz
+saved spectra in blended/gann_4_night_20210905_60/obs_0
+{'images': {'blended': {'mae': 0.08768274,
+                        'mse': 0.03308974,
+                        'psnr': 20.823665618896484,
+                        'rmse': 0.18190585,
+                        'ssim': 0.4555750787258148},
+            'generated': {'mae': 0.08593815,
+                          'mse': 0.024319166,
+                          'psnr': 21.783355712890625,
+                          'rmse': 0.15594603,
+                          'ssim': 0.45765334367752075}},
+ 'spectra': {'blended': {'max_mae': 0.74254304,
+                         'max_mse': 0.57786775,
+                         'max_rmse': 0.7601761,
+                         'min_cosine': -0.0971531},
+             'generated': {'max_mae': 0.7232041,
+                           'max_mse': 0.54380614,
+                           'max_rmse': 0.7374321,
+                           'min_cosine': -0.0858782}}}
+saved blended/gann_4_night_20210905_60/poisson_original.npz
+############################

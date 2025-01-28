@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=wganastro
-#SBATCH --output=scripts/wganastro.out
-#SBATCH --error=scripts/wganastro.err
+#SBATCH --job-name=ganastro
+#SBATCH --output=resume.out
+#SBATCH --error=resume.err
 #SBATCH --ntasks=1                                                              
 #SBATCH --nodes=1                                                               
 #SBATCH --partition=xgpu
 #SBATCH --mem=88000
 
-python wgan_train.py --config wgan.json
+python train.py --resume <path-to-checkpoint> --config <path-to-config>

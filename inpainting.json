@@ -6,7 +6,7 @@
         "type": "Generator",
         "args": {
             "num_features": 8,
-            "latent_dim": 100,
+            "latent_dim": 512,
             "num_channels": 1,
             "n_layers": 6
         }
@@ -23,11 +23,13 @@
     "data_loader": {
         "type": "NpzDataLoader",
         "args":{
-            "data_dir": "/projects/data/HARPN/K9_test/",
+            "data_dir": "/projects/data/HARPN/K9_preprocessed_v2/",
             "img_shape": [1, 762, 762],
-            "batch_size": 64,
-            "shuffle": true,
-            "num_workers": 2
+            "batch_size": 1,
+            "shuffle": false,
+            "spectrum_normalization": true,
+            "num_workers": 0,
+            "mode": "inpainting"
         }
     },
     "optimizer": {
@@ -39,14 +41,19 @@
     "loss": "inpaint_loss",
     "metrics": [],
     "inpainter": {
-        "epochs": 300,
+        "epochs": 20000,
+        "masking_level": 60,
+        "lamb": 0.001,
 
-        "save_dir": "inpaint/",
-        "save_period": 20,
+        "wl_grid": [4240, 4340, 10000],
+        "shape": [58, 10000],
+    
+        "save_dir": "experiments/inpainting",
+        "save_period": 100,
         "verbosity": 2,
         
         "monitor": "off",
-        "early_stop": 10,
+        "early_stop": 20000,
 
         "tensorboard": true
     }

@@ -14,13 +14,11 @@ from utils.util import prepare_device
 
 
 # fix random seeds for reproducibility
-"""
-SEED = 123
-torch.manual_seed(SEED)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-np.random.seed(SEED)
-"""
+# SEED = 123
+# torch.manual_seed(SEED)
+# torch.backends.cudnn.deterministic = True
+# torch.backends.cudnn.benchmark = False
+# np.random.seed(SEED)
 
 def main(config):
     logger = config.get_logger('train')
@@ -61,8 +59,6 @@ def main(config):
     discriminator_trainable_params = filter(lambda p: p.requires_grad, discriminator.parameters())
     generator_optimizer = config.init_obj('optimizer', torch.optim, generator_trainable_params)
     discriminator_optimizer = config.init_obj('optimizer', torch.optim, discriminator_trainable_params)
-    # generator_optimizer = torch.optim.Adam(generator_trainable_params, lr=0.0003, betas=(0.5, 0.999))
-    # discriminator_optimizer = torch.optim.Adam(discriminator_trainable_params, lr=0.0001, betas=(0.5, 0.999))
     
     optimizers = [generator_optimizer, discriminator_optimizer]
 
@@ -84,15 +80,5 @@ if __name__ == '__main__':
                       help='path to latest checkpoint (default: None)')
     args.add_argument('-d', '--device', default=None, type=str,
                       help='indices of GPUs to enable (default: all)')
-
-    """
-    # custom cli options to modify configuration from default values given in json file.
-    CustomArgs = collections.namedtuple('CustomArgs', 'flags type target')
-    options = [
-        CustomArgs(['--lr', '--learning_rate'], type=float, target='optimizer;args;lr'),
-        CustomArgs(['--bs', '--batch_size'], type=int, target='data_loader;args;batch_size')
-    ]
-    config = ConfigParser.from_args(args, options)
-    """
     config = ConfigParser.from_args(args)
     main(config)

@@ -5,8 +5,8 @@
     "generator": {
         "type": "Generator",
         "args": {
-            "num_features": 16,
-            "latent_dim": 100,
+            "num_features": 8,
+            "latent_dim": 512,
             "num_channels": 1,
             "n_layers": 6
         }
@@ -14,7 +14,7 @@
     "discriminator": {
         "type": "DiscriminatorDropout",
         "args": {
-            "num_features": 16,
+            "num_features": 8,
             "num_channels": 1,
             "n_dropout": 3,
             "n_layers": 6
@@ -23,12 +23,14 @@
     "data_loader": {
         "type": "NpzDataLoader",
         "args":{
-            "data_dir": "/projects/data/HARPN/K9_augmented/",
+            "data_dir": "/projects/data/HARPN/K9_augmented_v2/",
             "img_shape": [1, 762, 762],
             "batch_size": 64,
+            "spectrum_normalization": true,
             "shuffle": true,
             "validation_split": 0.1,
-            "num_workers": 2
+            "num_workers": 2,
+            "mode": "training"
         }
     },
     "optimizer": {
@@ -43,9 +45,9 @@
     "loss": "bce_loss_with_logits",
     "metrics": [],
     "trainer": {
-        "epochs": 50,
+        "epochs": 150,
 
-        "save_dir": "inpaint/",
+        "save_dir": "experiments/training/gann_2",
         "save_period": 1,
         "verbosity": 2,
         

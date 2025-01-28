@@ -147,6 +147,7 @@ class BaseInpainter:
         resume_path = str(resume_path)
         self.logger.info("Loading checkpoint: {} ...".format(resume_path))
         checkpoint = torch.load(resume_path)
+        self.start_epoch = checkpoint['epoch'] + 1
 
         # load architecture params from checkpoint.
         # load generator
@@ -169,4 +170,18 @@ class BaseInpainter:
             self.logger.warning(e)
             self.logger.warning("Warning: Discriminator state_dict not found in checkpoint. Discriminator model not being resumed.")
                      
+        # load parameters
+        try:
+            self.parameters.data = checkpoint['parameters']
+        except KeyError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Parameters not found in checkpoint. Parameters not being resumed.")
+        
+        # load optimizer state
+        try:
+            self.optimizer.load_state_dict(checkpoint['optimizer'])
+        except KeyError as e:
+            self.logger.warning(e)
+            self.logger.warning("Warning: Optimizer not found in checkpoint. Optimizer not being resumed.")
+        
         self.logger.info("Checkpoint loaded. Resume training from epoch {}".format(self.start_epoch))

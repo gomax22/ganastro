@@ -8,7 +8,7 @@ from operator import getitem
 from datetime import datetime
 from logger import setup_logging
 from utils.util import read_json, write_json
-
+from pprint import pprint
 
 class ConfigParser:
     def __init__(self, config, resume=None, modification=None, run_id=None):
@@ -77,6 +77,12 @@ class ConfigParser:
         if args.config and resume:
             # update new config for fine-tuning
             config.update(read_json(args.config))
+
+        if 'inpainter' in config.keys():
+            config['trainer'].update([('old_save_dir', config['trainer']['save_dir'])])
+            config['trainer'].update([('save_dir', config['inpainter']['save_dir'])])
+        # pprint(config)
+
 
         # parse custom cli options into dictionary
         modification = {opt.target : getattr(args, _get_opt_name(opt.flags)) for opt in options}
