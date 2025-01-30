@@ -1,0 +1,69 @@
+{
+    "name": "GANASTRO",
+    "n_gpu": 4,
+    "generator": {
+        "type": "Generator",
+        "args": {
+            "num_features": 8,
+            "latent_dim": 512,
+            "num_channels": 1,
+            "n_layers": 6
+        }
+    },
+    "discriminator": {
+        "type": "DiscriminatorDropout",
+        "args": {
+            "num_features": 8,
+            "num_channels": 1,
+            "n_dropout": 3,
+            "n_layers": 6
+        }
+    },
+    "data_loader": {
+        "type": "NpzDataLoader",
+        "args": {
+            "data_dir": "/projects/data/HARPN/K9_preprocessed_v2/",
+            "img_shape": [
+                1,
+                762,
+                762
+            ],
+            "batch_size": 1,
+            "shuffle": false,
+            "spectrum_normalization": true,
+            "num_workers": 0
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 0.01
+        }
+    },
+    "loss": "inpaint_loss",
+    "metrics": [],
+    "trainer": {
+        "epochs": 300,
+        "save_dir": "gann_4_night_20180708/",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": [
+            "off",
+            "off"
+        ],
+        "early_stop": 10,
+        "tensorboard": true,
+        "old_save_dir": "gann_2"
+    },
+    "inpainter": {
+        "epochs": 20000,
+        "masking_level": 20,
+        "lamb": 0.01,
+        "save_dir": "gann_4_night_20180708/",
+        "save_period": 100,
+        "verbosity": 2,
+        "monitor": "off",
+        "early_stop": 20000,
+        "tensorboard": true
+    }
+}

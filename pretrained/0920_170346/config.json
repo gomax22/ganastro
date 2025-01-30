@@ -1,0 +1,64 @@
+{
+    "name": "GANASTRO",
+    "n_gpu": 4,
+    "generator": {
+        "type": "Generator",
+        "args": {
+            "num_features": 8,
+            "latent_dim": 512,
+            "num_channels": 1,
+            "n_layers": 6
+        }
+    },
+    "discriminator": {
+        "type": "DiscriminatorDropout",
+        "args": {
+            "num_features": 8,
+            "num_channels": 1,
+            "n_dropout": 3,
+            "n_layers": 6
+        }
+    },
+    "data_loader": {
+        "type": "NpzDataLoader",
+        "args": {
+            "data_dir": "/projects/data/HARPN/K9_augmented_v2/",
+            "img_shape": [
+                1,
+                762,
+                762
+            ],
+            "batch_size": 64,
+            "spectrum_normalization": true,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 2
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 0.0002,
+            "weight_decay": 0,
+            "betas": [
+                0.5,
+                0.999
+            ],
+            "amsgrad": false
+        }
+    },
+    "loss": "bce_loss_with_logits",
+    "metrics": [],
+    "trainer": {
+        "epochs": 300,
+        "save_dir": "gann_2",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": [
+            "off",
+            "off"
+        ],
+        "early_stop": 10,
+        "tensorboard": true
+    }
+}
