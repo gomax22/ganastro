@@ -172,8 +172,6 @@ original**
 spectrum**
 residual**
 experiments/inpainting/**/log
-**.pth
-**.npz
 experiments/inpainting/**/models/GANASTRO/**/comparison_70.0
 experiments/inpainting/**/models/GANASTRO/**/comparison_80.0
 **.err
@@ -182,3 +180,7 @@ scripts/tell_rem_pca_wl_log_new.py
 pretrained/0804_123101/config.json
 pretrained/0804_123200/config.json
 pretrained/0911_163312/config.json
+pretrained/0804_123101/checkpoint-epoch145.pth
+pretrained/0804_123200/checkpoint-epoch154.pth
+pretrained/0911_163312/checkpoint-epoch240.pth
+pretrained/0920_170346/checkpoint-epoch250.pth
