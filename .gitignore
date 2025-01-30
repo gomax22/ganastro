@@ -170,7 +170,7 @@ blended/
 generated**
 original**
 spectrum**
-residual**
+residual_spectrum**.png
 experiments/inpainting/**/log
 experiments/inpainting/**/models/GANASTRO/**/comparison_70.0
 experiments/inpainting/**/models/GANASTRO/**/comparison_80.0
