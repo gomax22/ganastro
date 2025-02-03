@@ -172,6 +172,9 @@ original**
 spectrum**
 residual_spectrum**.png
 experiments/inpainting/**/log
+experiments/inpainting/**/models/GANASTRO/**/comparison_50.0
+experiments/inpainting/**/models/GANASTRO/**/comparison_55.0
+experiments/inpainting/**/models/GANASTRO/**/comparison_60.0
 experiments/inpainting/**/models/GANASTRO/**/comparison_65.0
 experiments/inpainting/**/models/GANASTRO/**/comparison_70.0
 experiments/inpainting/**/models/GANASTRO/**/comparison_75.0
