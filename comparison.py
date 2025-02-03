@@ -19,8 +19,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-
-
 def default(obj):
     if type(obj).__module__ == np.__name__:
         if isinstance(obj, np.ndarray):
@@ -216,7 +214,7 @@ def plot_images(
     ax[1, 0].set_title('PCA Reconstruction', fontsize=12)
 
     im = ax[1, 1].imshow(gan_recon_c[0], vmin=vmin, vmax=vmax, cmap='gray')
-    ax[1, 1].set_title('GAN Inpainted image', fontsize=12)
+    ax[1, 1].set_title('DCGAN Inpainted image', fontsize=12)
 
     fig.colorbar(im, ax=ax.ravel().tolist())
     fig.savefig(os.path.join(output_path, 'recons.png'), dpi=300)
@@ -231,7 +229,7 @@ def plot_images(
     ax[0].set_title('PCA Residual', fontsize=12)
 
     im = ax[1].imshow(gan_residual_c[0], vmin=vmin, vmax=vmax, cmap='viridis')
-    ax[1].set_title('GAN Residual', fontsize=12)
+    ax[1].set_title('DCGAN Residual', fontsize=12)
 
     cax = ax[1].inset_axes((1.05, 0, 0.08, 1.0))
     fig.colorbar(im, cax=cax)
@@ -255,11 +253,11 @@ def plot_histograms(pca_residual, gan_residual, output_path, num_bins=100, hist_
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 8))
     ax.grid(alpha=0.5)
-    ax.stairs(gan_norm_counts, gan_bin_edges, fill=True, color='red', alpha=0.6, label='GAN residual distribution')
+    ax.stairs(gan_norm_counts, gan_bin_edges, fill=True, color='red', alpha=0.6, label='DCGAN residual distribution')
     ax.stairs(pca_norm_counts, pca_bin_edges, fill=True, color='green', alpha=0.6, label='PCA residual distribution')
     ax2 = ax.twinx()
     
-    ax2.plot(gan_bin_edges[1:], gan_ecdf, color='red', linestyle='dashed', alpha=0.6, label='GAN ECDF')
+    ax2.plot(gan_bin_edges[1:], gan_ecdf, color='red', linestyle='dashed', alpha=0.6, label='DCGAN ECDF')
     ax2.plot(pca_bin_edges[1:], pca_ecdf, color='green', linestyle='dashed', alpha=0.6, label='PCA ECDF')
     ax.legend(fontsize=12, loc='upper left')
     ax.set_xlabel('Residual value', fontsize=12)
@@ -280,12 +278,12 @@ def plot_spectra(input_imgs, pca_recons, gan_recons, pca_residual, gan_residual,
     for idx, (real_spec, pca_spec, gan_spec, pca_res, gan_res) in enumerate(zip(input_imgs, pca_recons, gan_recons, pca_residual, gan_residual)):
         fig, ax = plt.subplots(2, 1, figsize=(8, 5), gridspec_kw={'height_ratios': [3, 1]})
         ax[0].plot(xx, real_spec, color='red', linewidth=0.5, alpha=0.8, label='Real')
-        ax[0].plot(xx, gan_spec, color='black', linewidth=0.5, alpha=0.8, label='GAN')
+        ax[0].plot(xx, gan_spec, color='black', linewidth=0.5, alpha=0.8, label='DCGAN')
         ax[0].plot(xx, pca_spec, color='darkgreen', linewidth=0.5, alpha=0.8, label='PCA')
         ax[0].set_ylabel('Counts', fontsize=12)
         ax[0].grid()
         ax[0].legend(fontsize=12)
-        ax[1].scatter(xx, gan_res, s=0.5, edgecolors='black', facecolors='none', alpha=0.3, label='GAN Residual')
+        ax[1].scatter(xx, gan_res, s=0.5, edgecolors='black', facecolors='none', alpha=0.3, label='DCGAN Residual')
         ax[1].scatter(xx, pca_res, s=0.5, edgecolors='darkgreen', facecolors='none', alpha=0.3, label='PCA Residual')
         ax[1].plot(xx, np.zeros_like(xx), color='black', linestyle='dashed', alpha=0.8)
         ax[1].set_xlabel('Wavelength', fontsize=12)
@@ -301,7 +299,7 @@ def plot_spectra(input_imgs, pca_recons, gan_recons, pca_residual, gan_residual,
     for idx, (pca_res, gan_res) in enumerate(zip(pca_residual, gan_residual)):
         fig, ax = plt.subplots(1, 1, figsize=(8, 5))
         ax.plot(xx, pca_res, color='darkgreen', linewidth=0.5, alpha=0.8, label='PCA Residual')
-        ax.plot(xx, gan_res, color='black', linewidth=0.5, alpha=0.8, label='GAN Residual')
+        ax.plot(xx, gan_res, color='black', linewidth=0.5, alpha=0.8, label='DCGAN Residual')
         ax.set_xlabel('Wavelength', fontsize=12)
         ax.set_ylabel('Residuals', fontsize=12)
         ax.grid()
@@ -326,7 +324,7 @@ def run_comparison(args, checkpoint_path, dir_path, output_dir):
     wl_grid = args['wl_grid']
     
     # load parameters computed by inpainter
-    checkpoint = torch.load(checkpoint_path)
+    checkpoint = torch.load(checkpoint_path, map_location=device)
     np_generated_imgs = np.load(os.path.join(output_dir, 'output', 'batch_0', 'batch_0.npz'))['generated_imgs']
     np_generated_imgs.resize(1, 1, 762, 762)
     print("Parameters are loaded.")
@@ -385,10 +383,10 @@ def run_comparison(args, checkpoint_path, dir_path, output_dir):
             ax[0].set_title('Original', fontsize=12)
 
             ax[1].imshow(generated_imgs, vmin=vmin, vmax=vmax, cmap='gray')
-            ax[1].set_title('GAN Generated', fontsize=12)
+            ax[1].set_title('DCGAN Generated', fontsize=12)
 
             im = ax[2].imshow(gan_recons, vmin=vmin, vmax=vmax, cmap='gray')
-            ax[2].set_title('GAN Reconstruction', fontsize=12)
+            ax[2].set_title('DCGAN Reconstruction', fontsize=12)
 
             cax = ax[2].inset_axes((1.05, 0, 0.08, 1.0))
             fig.colorbar(im, cax=cax)
@@ -422,7 +420,7 @@ def run_comparison(args, checkpoint_path, dir_path, output_dir):
             for idx, (real_spec, gan_spec) in enumerate(zip(real_imgs, gan_recons)):
                 fig, ax = plt.subplots(1, 1, figsize=(8, 5))
                 ax.plot(xx, real_spec, color='red', linewidth=0.5, alpha=0.8, label='Real')
-                ax.plot(xx, gan_spec, color='black', linewidth=0.5, alpha=0.8, label='GAN')
+                ax.plot(xx, gan_spec, color='black', linewidth=0.5, alpha=0.8, label='DCGAN')
                 ax.set_xlabel('Wavelength', fontsize=12)
                 ax.set_ylabel('Counts', fontsize=12)
                 ax.grid()
@@ -474,7 +472,7 @@ def run_comparison(args, checkpoint_path, dir_path, output_dir):
             for idx, (real_spec, gan_spec) in enumerate(zip(real_imgs, gan_recons)):
                 fig, ax = plt.subplots(1, 1, figsize=(8, 5))
                 ax.plot(xx, real_spec, color='red', linewidth=0.5, alpha=0.8, label='Real')
-                ax.plot(xx, gan_spec, color='black', linewidth=0.5, alpha=0.8, label='GAN')
+                ax.plot(xx, gan_spec, color='black', linewidth=0.5, alpha=0.8, label='DCGAN')
                 ax.set_xlabel('Wavelength', fontsize=12)
                 ax.set_ylabel('Counts', fontsize=12)
                 ax.grid()
@@ -495,7 +493,7 @@ def run_comparison(args, checkpoint_path, dir_path, output_dir):
             # 9. compute R_GAN and R_PCA residuals
             gan_residuals = pca_input_imgs - gan_recons                 # log space 
             pca_residuals = pca_input_imgs - pca_recons                 # log space
-            
+
             # 9.1 back to original domain
             gan_recons = postprocess(gan_recons, gan_medians, gan_means)
             pca_input_imgs = postprocess(pca_input_imgs, input_medians, input_means)
@@ -512,6 +510,7 @@ def run_comparison(args, checkpoint_path, dir_path, output_dir):
             obs_path = os.path.join(output_path, "spectra", f"obs_{batch_idx}")
             plot_spectra(pca_input_imgs, pca_recons, gan_recons, pca_residuals, gan_residuals, obs_path) # in original domain as in log space they are not so meaningful
 
+            
             # 9.4 plot histograms
             plot_histograms(pca_residuals, gan_residuals, output_path, hist_range=(-0.05, 0.05), label='log_-0.05_0.05')
             plot_histograms(pca_residuals, gan_residuals, output_path, label='log')
@@ -544,11 +543,14 @@ def run_comparison(args, checkpoint_path, dir_path, output_dir):
             
 
 def main(args):
+    if args['device'] is None:
+        args['device'] = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
     # get current directory
     source_dir = args['source_dir']
-    dir_paths = sorted([os.path.join(source_dir, d) for d in os.listdir(source_dir) if os.path.isdir(d) and d.startswith('gann_4_night')])
-    dirs = [os.path.join(source_dir, d, 'models', 'GANASTRO') for d in os.listdir(source_dir) if os.path.isdir(d) and d.startswith('gann_4_night')]
+    dir_paths = sorted([os.path.join(source_dir, d) for d in os.listdir(source_dir) if os.path.isdir(os.path.join(source_dir, d)) and d.startswith('gann_4_night')])
+    dirs = [os.path.join(dir_path, 'models', 'GANASTRO') for dir_path in dir_paths]
     
     # expriments according to the best configuration (MSE, 'SUM', L = 0.01)
     experiments_dirs = sorted([os.path.join(d, os.listdir(d)[6]) for d in dirs if os.path.exists(os.path.join(d, os.listdir(d)[6]))])

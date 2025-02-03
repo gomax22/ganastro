@@ -8,6 +8,9 @@ from utils.util import prepare_device
 from pathlib import Path
 from argparse import ArgumentParser
 from data.loader import NpzDataLoader
+from matplotlib.lines import Line2D
+import random
+from pprint import pprint
 
 MODELS = [
     'gan_2/models/GANASTRO/0918_090751/checkpoint-epoch50.pth',
@@ -140,7 +143,6 @@ def make_inpainting_loss(**kwargs):
     steps, values_20, values_40, values_60 = np.array(steps), np.array(values_20), np.array(values_40), np.array(values_60)
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    # ax.plot(steps, values_40 + (np.random.randn(len(values_20)) / 1000), color='blue', lw=0.5, label='20% of masked pixels')
     ax.plot(steps, values_20, color='blue', lw=1.5, label='20% of masked pixels')
     ax.plot(steps, values_40, color='orange', lw=1.5, label='40% of masked pixels')
     ax.plot(steps, values_60, color='green', lw=1.5, label='60% of masked pixels')
@@ -198,6 +200,94 @@ def plot_real_nights(**kwargs):
     plt.close(fig)
 
 
+def plot_stats(**kwargs):
+    output_dir = kwargs['output_dir']
+    comparison_dir = kwargs['comparison_dir']
+    mask_sizes = kwargs['mask_sizes']
+    nights = kwargs['nights']
+    markers = kwargs['markers']
+    energies = [95, 90, 85, 80, 75, 70, 65, 60, 55, 50]
+
+    comparison_files = [os.path.join(comparison_dir, txt_file) for txt_file in sorted(os.listdir(comparison_dir), reverse=True) if txt_file.endswith('.txt')]
+    assert len(energies) == len(comparison_files)
+
+    metrics = {}
+    for night in nights:
+
+        if night not in metrics.keys():
+            metrics[night] = {}
+        for mask in mask_sizes:
+
+            if mask not in metrics[night].keys():
+                metrics[night][mask] = {
+                    'kl_div': [],
+                    'ks_tests': []
+                }
+    
+    def update_stats(metrics, stat_name, lambda_fn, comparison_files):
+
+        # load txt files in comparison dir
+        for txt_file in comparison_files:
+
+            
+            night_idx = 0
+            mask_idx = 0
+
+            with open(txt_file, 'r') as f:
+                lines = f.readlines()
+
+            for line in lines:
+
+                if str(stat_name) not in line:
+                    continue
+                
+
+                metrics[nights[night_idx]][mask_sizes[mask_idx]][str(stat_name)].append(lambda_fn(line))
+                mask_idx += 1
+
+                if mask_idx % 3 == 0:
+                    mask_idx = 0
+                    night_idx += 1
+        return metrics
+    
+    metrics = update_stats(metrics, 'kl_div', lambda line: float(line.replace(" ", "").split(':')[1][:-2]), comparison_files)
+    metrics = update_stats(metrics, 'ks_tests', lambda line: float(line.split(',')[0].split('=')[-1]), comparison_files)
+
+    if markers is None:
+        markers = {k:v for k, v in Line2D.markers.items() if v != 'nothing'}
+        num_markers = len(nights)
+
+        drawn_markers = random.sample(markers.keys(), num_markers)
+        markers = [k for k, v in markers.items() if k in drawn_markers]
+
+    assert len(markers) == len(nights), 'Number of markers does not match the number of nights'
+
+    fig, ax = plt.subplots(3, 2, figsize=(11, 11))
+    for stat_idx in range(2):
+        for mask_idx, mask_size in enumerate(mask_sizes):
+            for night_idx, night in enumerate(metrics.keys()):
+                ax[mask_idx, stat_idx].plot(energies, np.array(metrics[night][mask_size]['kl_div' if stat_idx == 0 else 'ks_tests']), label=night if mask_idx == 0 and stat_idx == 0 else str(), marker=markers[night_idx])
+                ax[mask_idx, stat_idx].xaxis.set_inverted(True)
+                ax[mask_idx, stat_idx].set_xticks(energies)
+                
+
+                ax[mask_idx, stat_idx].set_xlabel('Percentage of Retained Variance', fontsize=12)
+                ax[mask_idx, stat_idx].set_ylabel('KL-Divergence' if stat_idx == 0 else 'KS-Statistic',  fontsize=12)
+                ax[mask_idx, stat_idx].set_title(f'Mask size = {mask_size}')
+                ax[mask_idx, stat_idx].grid(True)
+    fig.tight_layout(pad=2)
+    # fig.legend(loc=7, fontsize=12)
+    # fig.subplots_adjust(right=0.85)
+    # fig.legend(bbox_to_anchor=(0, 1.02, 1, 0.2), loc="lower left",
+    #            mode="expand", borderaxespad=0, ncol=2)
+    
+    fig.legend(loc='outside upper center', mode="expand", ncol=6, fontsize=12)
+    fig.subplots_adjust(top=0.92)
+    if not Path(output_dir).exists():
+        Path(output_dir).mkdir(exist_ok=True, parents=True)
+    
+    fig.savefig(os.path.join(output_dir, 'statistics.png'), dpi=400)
+    plt.close(fig)
 
 
 if __name__ == '__main__':
@@ -212,6 +302,10 @@ if __name__ == '__main__':
     ap.add_argument('--data_dir', default='/projects/data/HARPN/K9_preprocessed_v2')
     ap.add_argument('--output_dir', default='paper/images')
     ap.add_argument('--csv_dir', default='paper/csv')
+    ap.add_argument('--nights', default=['20180708', '20180722', '20180723', '20180901', '20180904', '20210905'])
+    ap.add_argument('--mask_sizes', default=['20', '40', '60'])
+    ap.add_argument('--comparison_dir', default='experiments/comparison')
+    ap.add_argument('--markers', default=['s', 'p', 'D', '*', '^', 'v'])
     args = ap.parse_args()
     args = vars(args)
     print(args)
