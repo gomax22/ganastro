@@ -34,7 +34,7 @@ In a time-limited session, you can resume the model training for a given checkpo
 python train.py --resume <path-to-checkpoint> --config <path-to-config>
 ```
 
-**N.B.:** To get a pretrained model or , please contact me at _massimiliano.giordanoorsini001@studenti.uniparthenope.it_ 
+**N.B.:** To get the weights of the pretrained model used for the experiments in the paper, please contact me at _massimiliano.giordanoorsini001@studenti.uniparthenope.it_ 
 
 Please put the downloaded file in ``pretrained/``.
 
