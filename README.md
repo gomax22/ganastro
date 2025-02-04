@@ -55,7 +55,7 @@ The following schema describes the comparison process between DCGAN and PCA-base
 
 ![Comparison between DCGAN and PCA-based detrending algorithms](./paper/images/residual_evaluation.png)
 
-We perform PCA by computing the optimal number of principal components retaining the 90% of the total variance. However, this hyperparameter can be specified by setting the option ``--energy_threshold``.
+We perform the PCA decomposition by computing the optimal number of principal components retaining the 90% of the total variance. However, this hyperparameter can be specified by setting the option ``--energy_threshold``.
 
 To perform the comparison, launch:
 ```
