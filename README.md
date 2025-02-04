@@ -3,11 +3,9 @@ Official code repository for the paper "A data-driven approach for extracting ex
 
 ![Overview of the proposed framework](./paper/images/overview.png)
 
-Paper figures are stored in the folder ``paper/images`` and in ``experiments/inpainting`` subfolders.
-
-Experimental results are extracted from text files in ``experiments/comparison``.
-
-The file ``make_plots.py`` provides the code for reproducing some plots shown in the paper.
+* Paper figures are stored in the folder ``paper/images`` and in ``experiments/inpainting`` subfolders.
+* Experimental results are extracted from text files in ``experiments/comparison``.
+* The file ``make_plots.py`` provides the code for reproducing some plots shown in the paper.
 
 
 ## Reproducing the experiments
