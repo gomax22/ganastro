@@ -61,3 +61,9 @@ python comparison.py --energy_threshold 90
 ```
 
 
+## Citation
+
+If you found this work useful for your research, please consider citing the corresponding paper:
+```
+TBD
+```
