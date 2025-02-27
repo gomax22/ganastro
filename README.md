@@ -65,5 +65,5 @@ python comparison.py --energy_threshold 90
 
 If you found this work useful for your research, please consider citing the corresponding paper:
 ```
-TBD
+Submission to Astronomy & Computing journal
 ```
