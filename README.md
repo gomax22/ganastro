@@ -65,5 +65,16 @@ python comparison.py --energy_threshold 90
 
 If you found this work useful for your research, please consider citing the corresponding paper:
 ```
-Submission to Astronomy & Computing journal
+@article{giordanoorsini_detrending_2025,
+title = {A data-driven approach for extracting exoplanetary atmospheric features},
+journal = {Astronomy and Computing},
+volume = {52},
+pages = {100964},
+year = {2025},
+issn = {2213-1337},
+doi = {https://doi.org/10.1016/j.ascom.2025.100964},
+url = {https://www.sciencedirect.com/science/article/pii/S221313372500037X},
+author = {Massimiliano {Giordano Orsini} and Alessio Ferone and Laura Inno and Paolo Giacobbe and Antonio Maratea and Angelo Ciaramella and Aldo Stefano Bonomo and Alessandra Rotundi},
+keywords = {Exoplanetary atmospheres, High-resolution spectroscopy, Deep learning, Detrending},
+}
 ```
